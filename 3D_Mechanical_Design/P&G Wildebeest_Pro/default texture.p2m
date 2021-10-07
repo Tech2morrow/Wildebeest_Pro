@@ -1,0 +1,26 @@
+# test for new mtl design
+
+color texture "color_texname" "Images\textures\pattern\checker.jpg"
+ 
+shader "top_name"  "top_mtl"  
+(
+ 	 "illum"		"model_3.p2a", 
+	 "color_effect"	"2d.p2a", 
+	 "num_cols"		0,
+	 "mapping"		2
+)
+ 
+
+material "iii"  "swt_main_phen"  
+(
+	 "col1"  1 1 1 ,
+	 "ambience"  1 1 1 ,
+	 "ambient_factor"  1.0 ,
+	 "diffuse_factor"  0.75 ,
+	 "specular_color"  1 1 1 ,
+	 "specular_factor"  0.5 ,
+	 "exponent"  50.0 ,
+	 "mtl_ior"  1,
+	 "ctex" "color_texname" 
+)
+end material 
