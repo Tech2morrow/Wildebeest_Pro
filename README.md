@@ -1,9 +1,10 @@
 # Wildebeest_Pro
-#WildebeestPro
+
 #opensourcecommunity #opensource #opensourcedevelopment
--------------------------------------------------------------------
+I would like to thank Mr.Anouar Dhouibi to assist on GUI deisgn using Joystick Teleoperation.
+---------------------------------------------------------------------------------------------
 Opensource (Include) - Mechanical design, Program, Circuit design,
--------------------------------------------------------------------
+---------------------------------------------------------------------------------------------
 Hardware Specification
 - Jetson Nano
 - GPS Neo 6m
