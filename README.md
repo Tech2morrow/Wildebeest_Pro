@@ -15,6 +15,7 @@ Hardware Specification
 - Arduino UNO
 - 2D LiDAR (Customized Hardware)
 - Ultrasonic Sensor (HC-SRM04)
+- 
 Visit: www.academy4tech.com
 For daily updates.
 https://github.com/Tech2morrow/Wildebeest_Pro
