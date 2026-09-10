@@ -138,8 +138,13 @@ def validate_canonical_defaults():
             "priority: 40",
         ),
         "wildebeest_bringup/launch/robot.launch": (
-            "arg('localization').lower() != 'true'",
-            "arg('navigation').lower() == 'true' and arg('mapping').lower() != 'true'",
+            "$(eval not arg('use_sim'))",
+            "$(eval not arg('localization'))",
+            "$(eval arg('use_gps_localization') and not arg('navigation') and not arg('mapping'))",
+            "$(eval arg('navigation') and not arg('mapping'))",
+        ),
+        "wildebeest_base/launch/base.launch": (
+            "$(eval 'mock' if arg('mock') else 'serial')",
         ),
         "wildebeest_simulation/launch/gazebo.launch": (
             'name="z" default="0.035"',
@@ -150,6 +155,16 @@ def validate_canonical_defaults():
         for needle in needles:
             if needle not in content:
                 fail("{} is missing canonical value {!r}".format(relative, needle))
+
+    bool_string_coercion = re.compile(r"arg\('[^']+'\)\.lower\(\)")
+    for launch in SOURCE.rglob("*.launch"):
+        content = launch.read_text(encoding="utf-8")
+        if bool_string_coercion.search(content):
+            fail(
+                "{} treats a roslaunch boolean as a string inside $(eval)".format(
+                    launch.relative_to(WORKSPACE)
+                )
+            )
 
     urdf = (SOURCE / "wildebeest_description/urdf/wildebeest.urdf.xacro").read_text(
         encoding="utf-8"

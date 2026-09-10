@@ -8,7 +8,7 @@
 
   <node pkg="wildebeest_base" type="serial_bridge_node.py" name="base_serial_bridge" output="screen" required="true">
     <rosparam command="load" file="$(arg config)"/>
-    <param name="transport" value="$(eval 'mock' if arg('mock').lower() == 'true' else 'serial')"/>
+    <param name="transport" value="$(eval 'mock' if arg('mock') else 'serial')"/>
     <param name="port" value="$(arg port)"/>
     <param name="publish_odom_tf" value="$(arg publish_odom_tf)"/>
     <remap from="wheel/odometry" to="$(arg odom_topic)"/>
