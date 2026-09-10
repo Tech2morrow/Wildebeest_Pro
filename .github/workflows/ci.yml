@@ -112,10 +112,20 @@ jobs:
             .dockerignore
       - name: Build ${{ matrix.name }} image
         run: docker build --file "${{ matrix.dockerfile }}" --tag wildebeest-ci:${{ matrix.tag }} .
-      - name: Smoke-test mock bringup
+      - name: Verify mock handshake and live odometry
         run: |
-          set +e
-          timeout 20s docker run --rm wildebeest-ci:${{ matrix.tag }}
-          status=$?
-          set -e
-          test "$status" -eq 124
+          container_id="$(docker run --detach --rm wildebeest-ci:${{ matrix.tag }})"
+          cleanup() {
+            docker logs "$container_id" || true
+            docker rm --force "$container_id" >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+          docker exec "$container_id" bash -lc '
+            source "/opt/ros/${ROS_DISTRO}/setup.bash"
+            if [[ "${ROS_VERSION}" == "1" ]]; then
+              source /wildebeest/ros1_ws/devel/setup.bash
+            else
+              source /wildebeest/ros2_ws/install/setup.bash
+            fi
+            python3 /smoke_check.py
+          '

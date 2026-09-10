@@ -12,11 +12,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /wildebeest/ros1_ws
 COPY ros1_ws/src ./src
 COPY tests/fixtures /wildebeest/tests/fixtures
-RUN source /opt/ros/noetic/setup.bash && \
-    rosdep install --from-paths src --ignore-src --rosdistro noetic -r -y && \
+# gscam is an optional, hardware-specific Jetson camera integration and is not
+# released through the Noetic rosdep index; the portable mock profile disables it.
+RUN apt-get update && \
+    source /opt/ros/noetic/setup.bash && \
+    rosdep install --from-paths src --ignore-src --rosdistro noetic \
+      --skip-keys gscam -r -y && \
     catkin_make && \
     catkin_make run_tests && \
-    catkin_test_results build/test_results
+    catkin_test_results build/test_results && \
+    rm -rf /var/lib/apt/lists/*
+COPY --chmod=755 docker/smoke_check.py /smoke_check.py
 COPY --chmod=755 docker/ros_entrypoint.sh /ros_entrypoint.sh
 ENTRYPOINT ["/ros_entrypoint.sh"]
 CMD ["roslaunch", "wildebeest_bringup", "robot.launch", "use_sim:=true"]

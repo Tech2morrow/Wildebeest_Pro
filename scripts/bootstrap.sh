@@ -37,5 +37,12 @@ if [[ ! -f /etc/ros/rosdep/sources.list.d/20-default.list ]]; then
   sudo rosdep init
 fi
 rosdep update
-rosdep install --from-paths "$WORKSPACE/src" --ignore-src --rosdistro "$TARGET_DISTRO" -r -y
+ROSDEP_SKIP_KEYS=()
+if [[ "$TARGET" == "ros1" ]]; then
+  # The Jetson-specific gscam integration is source-only in this Noetic profile.
+  # Camera launch remains opt-in until that driver is installed and validated.
+  ROSDEP_SKIP_KEYS=(--skip-keys gscam)
+fi
+rosdep install --from-paths "$WORKSPACE/src" --ignore-src \
+  --rosdistro "$TARGET_DISTRO" "${ROSDEP_SKIP_KEYS[@]}" -r -y
 echo "Dependencies for $TARGET are installed. Run ./scripts/build.sh $TARGET"

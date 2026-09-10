@@ -33,7 +33,8 @@ Manual equivalent:
 
 ```bash
 source /opt/ros/noetic/setup.bash
-rosdep install --from-paths ros1_ws/src --ignore-src -r -y --rosdistro noetic
+rosdep install --from-paths ros1_ws/src --ignore-src -r -y \
+  --rosdistro noetic --skip-keys gscam
 cd ros1_ws
 catkin_make
 source devel/setup.bash
@@ -119,7 +120,7 @@ Do not set `ROS_HOSTNAME` and `ROS_IP` inconsistently. Test by echoing a small t
 
 ## Sensors and navigation
 
-GPS, LiDAR and camera remain model-specific Jetson devices. Install only drivers compatible with Noetic and the exact vendor hardware. Validate each standalone before including it in bringup.
+GPS, LiDAR and camera remain model-specific Jetson devices. Install only drivers compatible with Noetic and the exact vendor hardware. Validate each standalone before including it in bringup. `gscam` is not resolved by the current Noetic rosdep index, so the bootstrap deliberately skips it and the camera launch defaults to off. Install and validate a Jetson-compatible `gscam` build separately, then opt in with `camera:=true`; do not enable that launch flag merely because a camera frame exists in the URDF.
 
 For mapping/navigation, prove `/scan`, `odom -> base_link`, URDF transforms, footprint, and stop paths before starting the navigation stack. Store real maps outside generated build directories and record their coordinate origin and environment revision.
 
