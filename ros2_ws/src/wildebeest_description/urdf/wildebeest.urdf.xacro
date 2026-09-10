@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<robot name="wildebeest_pro" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:arg name="name" default="wildebeest_pro"/>
+  <xacro:arg name="prefix" default=""/>
+  <xacro:arg name="use_gazebo" default="false"/>
+
+  <xacro:include filename="$(find wildebeest_description)/urdf/materials.xacro"/>
+  <xacro:include filename="$(find wildebeest_description)/urdf/inertials.xacro"/>
+  <xacro:include filename="$(find wildebeest_description)/urdf/wildebeest.gazebo.xacro"/>
+
+  <xacro:property name="prefix" value="$(arg prefix)"/>
+  <!-- CAD-derived nominal dimensions; calibrate the assembled chassis. -->
+  <xacro:property name="base_length" value="0.257"/>
+  <xacro:property name="base_width" value="0.150"/>
+  <xacro:property name="base_height" value="0.031"/>
+  <xacro:property name="wheel_radius" value="0.033622"/>
+  <xacro:property name="wheel_width" value="0.025065"/>
+  <xacro:property name="wheel_track" value="0.121843"/>
+  <xacro:property name="wheelbase" value="0.117150"/>
+
+  <link name="${prefix}base_footprint"/>
+
+  <joint name="${prefix}base_footprint_joint" type="fixed">
+    <parent link="${prefix}base_link"/>
+    <child link="${prefix}base_footprint"/>
+    <origin xyz="0 0 ${-wheel_radius}" rpy="0 0 0"/>
+  </joint>
+
+  <link name="${prefix}base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><box size="${base_length} ${base_width} ${base_height}"/></geometry>
+      <material name="wildebeest_blue"/>
+    </visual>
+    <visual>
+      <origin xyz="0 0 ${base_height / 2.0 + 0.002}" rpy="0 0 0"/>
+      <geometry><box size="0.225 0.120 0.004"/></geometry>
+      <material name="wildebeest_graphite"/>
+    </visual>
+    <collision>
+      <geometry><box size="${base_length} ${base_width} ${base_height}"/></geometry>
+    </collision>
+    <xacro:box_inertial mass="2.4" x="${base_length}" y="${base_width}" z="${base_height}"/>
+  </link>
+
+  <xacro:macro name="drive_wheel" params="side axle x y">
+    <joint name="${prefix}${side}_${axle}_wheel_joint" type="continuous">
+      <parent link="${prefix}base_link"/>
+      <child link="${prefix}${side}_${axle}_wheel_link"/>
+      <origin xyz="${x} ${y} 0" rpy="0 0 0"/>
+      <axis xyz="0 -1 0"/>
+      <dynamics damping="0.05" friction="0.02"/>
+    </joint>
+    <link name="${prefix}${side}_${axle}_wheel_link">
+      <visual>
+        <origin rpy="${pi / 2.0} 0 0"/>
+        <geometry><cylinder radius="${wheel_radius}" length="${wheel_width}"/></geometry>
+        <material name="wildebeest_rubber"/>
+      </visual>
+      <collision>
+        <origin rpy="${pi / 2.0} 0 0"/>
+        <geometry><cylinder radius="${wheel_radius}" length="${wheel_width}"/></geometry>
+      </collision>
+      <xacro:cylinder_inertial mass="0.12" radius="${wheel_radius}" length="${wheel_width}" origin_rpy="${pi / 2.0} 0 0"/>
+    </link>
+  </xacro:macro>
+  <xacro:drive_wheel side="left" axle="front" x="${wheelbase / 2.0}" y="${wheel_track / 2.0}"/>
+  <xacro:drive_wheel side="left" axle="rear" x="${-wheelbase / 2.0}" y="${wheel_track / 2.0}"/>
+  <xacro:drive_wheel side="right" axle="front" x="${wheelbase / 2.0}" y="${-wheel_track / 2.0}"/>
+  <xacro:drive_wheel side="right" axle="rear" x="${-wheelbase / 2.0}" y="${-wheel_track / 2.0}"/>
+
+  <joint name="${prefix}jetson_joint" type="fixed">
+    <parent link="${prefix}base_link"/>
+    <child link="${prefix}jetson_link"/>
+    <origin xyz="-0.025 0 0.060"/>
+  </joint>
+  <link name="${prefix}jetson_link">
+    <visual>
+      <geometry><box size="0.10 0.08 0.04"/></geometry>
+      <material name="wildebeest_green"/>
+    </visual>
+    <collision><geometry><box size="0.10 0.08 0.04"/></geometry></collision>
+    <xacro:box_inertial mass="0.16" x="0.10" y="0.08" z="0.04"/>
+  </link>
+
+  <joint name="${prefix}arduino_joint" type="fixed">
+    <parent link="${prefix}base_link"/>
+    <child link="${prefix}arduino_link"/>
+    <origin xyz="-0.082 0 0.038"/>
+  </joint>
+  <link name="${prefix}arduino_link">
+    <visual>
+      <geometry><box size="0.07 0.055 0.014"/></geometry>
+      <material name="wildebeest_cyan"/>
+    </visual>
+    <xacro:box_inertial mass="0.04" x="0.07" y="0.055" z="0.014"/>
+  </link>
+
+  <joint name="${prefix}lidar_joint" type="fixed">
+    <parent link="${prefix}base_link"/>
+    <child link="${prefix}lidar_link"/>
+    <origin xyz="0.015 0 0.095"/>
+  </joint>
+  <link name="${prefix}lidar_link">
+    <visual>
+      <geometry><cylinder radius="0.047" length="0.055"/></geometry>
+      <material name="wildebeest_graphite"/>
+    </visual>
+    <collision><geometry><cylinder radius="0.047" length="0.055"/></geometry></collision>
+    <xacro:cylinder_inertial mass="0.18" radius="0.047" length="0.055"/>
+  </link>
+
+  <joint name="${prefix}imu_joint" type="fixed">
+    <parent link="${prefix}base_link"/>
+    <child link="${prefix}imu_link"/>
+    <origin xyz="0 0 0.030"/>
+  </joint>
+  <link name="${prefix}imu_link">
+    <visual>
+      <geometry><box size="0.022 0.017 0.004"/></geometry>
+      <material name="wildebeest_red"/>
+    </visual>
+    <xacro:box_inertial mass="0.003" x="0.022" y="0.017" z="0.004"/>
+  </link>
+
+  <joint name="${prefix}gps_joint" type="fixed">
+    <parent link="${prefix}base_link"/>
+    <child link="${prefix}gps_link"/>
+    <origin xyz="-0.080 0 0.042"/>
+  </joint>
+  <link name="${prefix}gps_link">
+    <visual>
+      <geometry><box size="0.035 0.025 0.008"/></geometry>
+      <material name="wildebeest_green"/>
+    </visual>
+    <xacro:box_inertial mass="0.012" x="0.035" y="0.025" z="0.008"/>
+  </link>
+
+  <joint name="${prefix}camera_joint" type="fixed">
+    <parent link="${prefix}base_link"/>
+    <child link="${prefix}camera_link"/>
+    <origin xyz="0.128 0 0.060" rpy="0 0 0"/>
+  </joint>
+  <link name="${prefix}camera_link">
+    <visual>
+      <geometry><box size="0.025 0.032 0.032"/></geometry>
+      <material name="wildebeest_graphite"/>
+    </visual>
+    <collision><geometry><box size="0.025 0.032 0.032"/></geometry></collision>
+    <xacro:box_inertial mass="0.018" x="0.025" y="0.032" z="0.032"/>
+  </link>
+  <joint name="${prefix}camera_optical_joint" type="fixed">
+    <parent link="${prefix}camera_link"/>
+    <child link="${prefix}camera_optical_frame"/>
+    <origin rpy="-${pi / 2.0} 0 -${pi / 2.0}"/>
+  </joint>
+  <link name="${prefix}camera_optical_frame"/>
+
+  <joint name="${prefix}ultrasonic_front_joint" type="fixed">
+    <parent link="${prefix}base_link"/>
+    <child link="${prefix}ultrasonic_front_link"/>
+    <origin xyz="0.136 0 0.018"/>
+  </joint>
+  <link name="${prefix}ultrasonic_front_link">
+    <visual>
+      <origin rpy="0 ${pi / 2.0} 0"/>
+      <geometry><cylinder radius="0.019" length="0.015"/></geometry>
+      <material name="wildebeest_silver"/>
+    </visual>
+    <xacro:cylinder_inertial mass="0.009" radius="0.019" length="0.015" origin_rpy="0 ${pi / 2.0} 0"/>
+  </link>
+
+  <xacro:if value="$(arg use_gazebo)">
+    <xacro:wildebeest_gazebo prefix="${prefix}"/>
+  </xacro:if>
+</robot>

@@ -1,0 +1,22 @@
+name: Hardware measurement or sensor profile
+description: Contribute measured dimensions, calibration or a supported device profile
+title: "[Hardware]: "
+labels: ["hardware", "triage"]
+body:
+  - type: input
+    id: component
+    attributes: { label: Exact component and revision }
+    validations: { required: true }
+  - type: textarea
+    id: method
+    attributes:
+      label: Measurement method
+      description: Instrument, units, load/temperature condition, sample count and uncertainty
+    validations: { required: true }
+  - type: textarea
+    id: result
+    attributes: { label: Results and repeatability }
+    validations: { required: true }
+  - type: textarea
+    id: artifacts
+    attributes: { label: Config/test artifacts included }

@@ -1,0 +1,6 @@
+# Arduino Uno official VID/PID. Add ATTRS{serial}=="..." on multi-board systems.
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0043", MODE:="0660", GROUP:="dialout", SYMLINK+="wildebeest-base"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2a03", ATTRS{idProduct}=="0043", MODE:="0660", GROUP:="dialout", SYMLINK+="wildebeest-base"
+
+# LiDAR and GNSS adapters vary. Inspect `udevadm info --attribute-walk --name=/dev/ttyUSB0`
+# and add serial-number-specific rules rather than copying an unsafe generic USB-serial match.

@@ -1,0 +1,13 @@
+{
+  "name": "Wildebeest Pro — ROS 1 Noetic (legacy)",
+  "build": { "dockerfile": "../../docker/ros1.Dockerfile", "context": "../.." },
+  "workspaceMount": "source=${localWorkspaceFolder},target=/wildebeest,type=bind,consistency=cached",
+  "workspaceFolder": "/wildebeest",
+  "postCreateCommand": "bash -lc 'source /opt/ros/noetic/setup.bash && catkin_make -C /wildebeest/ros1_ws'",
+  "runArgs": ["--network=host"],
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-python.python", "ms-vscode.cpptools", "redhat.vscode-xml", "redhat.vscode-yaml"]
+    }
+  }
+}

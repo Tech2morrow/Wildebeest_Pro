@@ -1,0 +1,121 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  host-quality:
+    name: Protocol, dashboard, manifests, and docs
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout source without the large CAD corpus
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          lfs: false
+          fetch-depth: 1
+          sparse-checkout: |
+            .github
+            assets
+            config
+            dashboard
+            docs
+            firmware
+            ros1_ws
+            ros2_ws
+            scripts
+            tests
+            tools
+            .dockerignore
+            .editorconfig
+            .gitattributes
+            .gitignore
+            compose.yaml
+            Makefile
+            README.md
+            requirements-ci.txt
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22"
+
+      - name: Install quality dependencies
+        run: python -m pip install --disable-pip-version-check -r requirements-ci.txt
+
+      - name: Run host-side quality gates
+        run: |
+          python -m unittest discover -s tools/tests -v
+          node --test dashboard/test/*.test.mjs
+          python tools/robot_doctor.py
+          python ros1_ws/tools/run_checks.py
+          python ros2_ws/scripts/validate_workspace.py
+          mkdocs build --strict -f docs/mkdocs.yml
+          bash -n scripts/*.sh
+
+  firmware:
+    name: Arduino Uno firmware
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          lfs: false
+          fetch-depth: 1
+          sparse-checkout: |
+            firmware
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - name: Install PlatformIO
+        run: python -m pip install --disable-pip-version-check platformio==6.2.0
+      - name: Compile firmware
+        run: platformio run -d firmware/wildebeest_base
+
+  ros-containers:
+    name: ${{ matrix.name }} workspace image
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: ROS 2 Jazzy
+            dockerfile: docker/ros2.Dockerfile
+            tag: ros2
+          - name: ROS 1 Noetic legacy
+            dockerfile: docker/ros1.Dockerfile
+            tag: ros1
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          lfs: false
+          fetch-depth: 1
+          sparse-checkout: |
+            docker
+            ros1_ws
+            ros2_ws
+            tests
+            .dockerignore
+      - name: Build ${{ matrix.name }} image
+        run: docker build --file "${{ matrix.dockerfile }}" --tag wildebeest-ci:${{ matrix.tag }} .
+      - name: Smoke-test mock bringup
+        run: |
+          set +e
+          timeout 20s docker run --rm wildebeest-ci:${{ matrix.tag }}
+          status=$?
+          set -e
+          test "$status" -eq 124

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Wildebeest Pro mark</title>
+  <desc id="desc">A geometric W shaped like an autonomous robot and wildebeest horns.</desc>
+  <defs>
+    <linearGradient id="g" x1="18" y1="12" x2="110" y2="116" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#63f5d2"/><stop offset="1" stop-color="#27a8ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="30" fill="#07131f"/>
+  <path d="M24 33c7-11 17-16 29-17-8 8-11 17-9 27M104 33c-7-11-17-16-29-17 8 8 11 17 9 27" fill="none" stroke="url(#g)" stroke-width="7" stroke-linecap="round"/>
+  <path d="M29 42l15 51 20-30 20 30 15-51" fill="none" stroke="url(#g)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="64" cy="50" r="7" fill="#f5b942"/>
+</svg>

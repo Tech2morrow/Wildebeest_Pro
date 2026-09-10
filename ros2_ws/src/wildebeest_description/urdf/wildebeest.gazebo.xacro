@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="wildebeest_gazebo" params="prefix">
+    <gazebo reference="${prefix}base_link">
+      <material>Gazebo/Blue</material>
+    </gazebo>
+    <gazebo reference="${prefix}left_front_wheel_link">
+      <material>Gazebo/Black</material>
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+    </gazebo>
+    <gazebo reference="${prefix}left_rear_wheel_link">
+      <material>Gazebo/Black</material>
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+    </gazebo>
+    <gazebo reference="${prefix}right_front_wheel_link">
+      <material>Gazebo/Black</material>
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+    </gazebo>
+    <gazebo reference="${prefix}right_rear_wheel_link">
+      <material>Gazebo/Black</material>
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+    </gazebo>
+
+    <gazebo>
+        <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
+          <left_joint>${prefix}left_front_wheel_joint</left_joint>
+          <left_joint>${prefix}left_rear_wheel_joint</left_joint>
+          <right_joint>${prefix}right_front_wheel_joint</right_joint>
+          <right_joint>${prefix}right_rear_wheel_joint</right_joint>
+          <wheel_separation>0.121843</wheel_separation>
+          <wheel_radius>0.033622</wheel_radius>
+          <topic>cmd_vel/sim_safe</topic>
+          <odom_topic>odom</odom_topic>
+          <tf_topic>tf</tf_topic>
+          <frame_id>${prefix}odom</frame_id>
+          <child_frame_id>${prefix}base_link</child_frame_id>
+          <odom_publish_frequency>50</odom_publish_frequency>
+        </plugin>
+        <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher">
+          <topic>joint_states</topic>
+          <joint_name>${prefix}left_front_wheel_joint</joint_name>
+          <joint_name>${prefix}left_rear_wheel_joint</joint_name>
+          <joint_name>${prefix}right_front_wheel_joint</joint_name>
+          <joint_name>${prefix}right_rear_wheel_joint</joint_name>
+        </plugin>
+    </gazebo>
+
+    <gazebo reference="${prefix}lidar_link">
+      <sensor name="wildebeest_lidar" type="gpu_lidar">
+        <topic>scan</topic>
+        <update_rate>10</update_rate>
+        <always_on>true</always_on>
+        <visualize>true</visualize>
+        <lidar>
+          <scan>
+            <horizontal>
+              <samples>720</samples>
+              <resolution>1</resolution>
+              <min_angle>-3.14159265</min_angle>
+              <max_angle>3.14159265</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.12</min>
+            <max>12.0</max>
+            <resolution>0.01</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.005</stddev>
+          </noise>
+        </lidar>
+      </sensor>
+    </gazebo>
+
+    <gazebo reference="${prefix}imu_link">
+      <sensor name="wildebeest_imu" type="imu">
+        <topic>imu/data_raw</topic>
+        <update_rate>100</update_rate>
+        <always_on>true</always_on>
+      </sensor>
+    </gazebo>
+
+    <!-- A narrow GPU lidar is bridged as sensor_msgs/Range to emulate the
+         front HC-SR04 contract without pretending to model exact acoustics. -->
+    <gazebo reference="${prefix}ultrasonic_front_link">
+      <sensor name="wildebeest_front_range" type="gpu_lidar">
+        <topic>range/front_raw</topic>
+        <gz_frame_id>${prefix}ultrasonic_front_link</gz_frame_id>
+        <update_rate>10</update_rate>
+        <always_on>true</always_on>
+        <visualize>true</visualize>
+        <lidar>
+          <scan>
+            <horizontal>
+              <samples>5</samples>
+              <resolution>1</resolution>
+              <min_angle>-0.13</min_angle>
+              <max_angle>0.13</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.02</min>
+            <max>2.0</max>
+            <resolution>0.01</resolution>
+          </range>
+        </lidar>
+      </sensor>
+    </gazebo>
+
+    <gazebo reference="${prefix}camera_link">
+      <sensor name="wildebeest_camera" type="camera">
+        <topic>camera/image_raw</topic>
+        <camera_info_topic>camera/camera_info</camera_info_topic>
+        <update_rate>30</update_rate>
+        <always_on>true</always_on>
+        <camera>
+          <horizontal_fov>1.3962634</horizontal_fov>
+          <image>
+            <width>1280</width>
+            <height>720</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.08</near>
+            <far>100</far>
+          </clip>
+        </camera>
+      </sensor>
+    </gazebo>
+
+    <gazebo reference="${prefix}gps_link">
+      <sensor name="wildebeest_navsat" type="navsat">
+        <topic>gps/fix</topic>
+        <update_rate>5</update_rate>
+        <always_on>true</always_on>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+</robot>

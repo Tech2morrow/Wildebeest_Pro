@@ -1,0 +1,10 @@
+pub_rate: 1.0
+analyzers:
+  base:
+    type: diagnostic_aggregator/GenericAnalyzer
+    path: Base
+    startswith: ["Wildebeest Pro/base"]
+  localization:
+    type: diagnostic_aggregator/GenericAnalyzer
+    path: Localization
+    contains: ["ekf", "navsat"]

@@ -1,0 +1,23 @@
+topics:
+  - name: navigation
+    topic: cmd_vel_nav
+    timeout: 0.50
+    priority: 10
+  - name: remote
+    topic: /cmd_vel/remote
+    timeout: 0.35
+    priority: 40
+  - name: keyboard
+    topic: cmd_vel_keyboard
+    timeout: 0.35
+    priority: 50
+  - name: joystick
+    topic: cmd_vel_joy
+    timeout: 0.35
+    priority: 100
+
+locks:
+  - name: software_estop
+    topic: /wildebeest/estop
+    timeout: 0.0
+    priority: 255

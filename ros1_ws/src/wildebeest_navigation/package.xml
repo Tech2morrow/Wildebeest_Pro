@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>wildebeest_navigation</name>
+  <version>0.1.0</version>
+  <description>ROS Noetic localization, mapped navigation, and mapping profiles for Wildebeest Pro.</description>
+
+  <maintainer email="maintainers@wildebeest-pro.org">Wildebeest Pro Maintainers</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>amcl</exec_depend>
+  <exec_depend>clear_costmap_recovery</exec_depend>
+  <exec_depend>costmap_2d</exec_depend>
+  <exec_depend>dwa_local_planner</exec_depend>
+  <exec_depend>map_server</exec_depend>
+  <exec_depend>move_base</exec_depend>
+  <exec_depend>navfn</exec_depend>
+  <exec_depend>robot_localization</exec_depend>
+  <exec_depend>gmapping</exec_depend>
+  <exec_depend>rotate_recovery</exec_depend>
+
+  <export/>
+</package>

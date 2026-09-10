@@ -1,13 +1,3 @@
-shader "top_name"  "top_mtl"  
-(
- 	 "num_cols"  1 ,
-	 "illum" "model_16.p2a"
-)
- 
-material "iii"  "swt_main_phen"  
-(
-	 "reflectivity"  0.8 ,
-	 "sw_shader" TransparentFloor
-)
- 
-end material 
+version https://git-lfs.github.com/spec/v1
+oid sha256:76bc7671d49e51bcd5f0550df6adbddffcb89772072f85aa65f22bc0c76f4bb7
+size 190

@@ -1,0 +1,29 @@
+/**:
+  ros__parameters:
+    transport: serial
+    port: /dev/wildebeest-base
+    baudrate: 115200
+    reconnect_interval_s: 2.0
+    read_rate_hz: 100.0
+    telemetry_timeout_s: 1.0
+    command_timeout_s: 0.3
+    ping_interval_s: 1.0
+    max_linear_m_s: 0.45
+    max_angular_rad_s: 1.8
+    max_wheel_rad_s: 18.0
+    # CAD nominal only; calibrate effective rolling radius and skid-steer track.
+    wheel_radius_m: 0.033622
+    wheel_separation_m: 0.121843
+    ticks_per_revolution: 600
+    publish_odom_tf: true
+    odom_frame: odom
+    base_frame: base_link
+    imu_frame: imu_link
+    range_frame: ultrasonic_front_link
+    left_wheel_joints: [left_front_wheel_joint, left_rear_wheel_joint]
+    right_wheel_joints: [right_front_wheel_joint, right_rear_wheel_joint]
+    range_min_m: 0.02
+    range_max_m: 2.0
+    range_field_of_view_rad: 0.26
+    estop_on_shutdown: true
+    release_estop_on_connect: false

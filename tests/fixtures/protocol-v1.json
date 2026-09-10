@@ -1,0 +1,39 @@
+{
+  "name": "Wildebeest serial protocol v1 interoperability vectors",
+  "crc": "CRC-16/CCITT-FALSE",
+  "limits": {
+    "max_frame_bytes": 128,
+    "battery_mv": [0, 20000],
+    "front_mm": [0, 2000]
+  },
+  "vectors": [
+    { "frame": "@PING,0*E6B3\n", "kind": "PING", "sequence": 0, "fields": [] },
+    { "frame": "@CMD,42,120,-350*E3DF\n", "kind": "CMD", "sequence": 42, "fields": ["120", "-350"] },
+    { "frame": "@ESTOP,65535,1*9864\n", "kind": "ESTOP", "sequence": 65535, "fields": ["1"] },
+    { "frame": "@ODOM,9,123,-456,780,-810,7420,5*82A1\n", "kind": "ODOM", "sequence": 9, "fields": ["123", "-456", "780", "-810", "7420", "5"] },
+    { "frame": "@IMU,10,0,-12,1001,23,-45,67*B026\n", "kind": "IMU", "sequence": 10, "fields": ["0", "-12", "1001", "23", "-45", "67"] },
+    { "frame": "@RANGE,11,875*F1EF\n", "kind": "RANGE", "sequence": 11, "fields": ["875"] },
+    { "frame": "@BOOT,0,WILDEBEEST_BASE,1*6C1C\n", "kind": "BOOT", "sequence": 0, "fields": ["WILDEBEEST_BASE", "1"] },
+    { "frame": "@ERR,12,SCHEMA*24BF\n", "kind": "ERR", "sequence": 12, "fields": ["SCHEMA"] },
+    { "frame": "@CMD,65535,-450,1800*882A\n", "kind": "CMD", "sequence": 65535, "fields": ["-450", "1800"] },
+    { "frame": "@ODOM,65534,-2147483648,2147483647,-100000,100000,0,65535*BA43\n", "kind": "ODOM", "sequence": 65534, "fields": ["-2147483648", "2147483647", "-100000", "100000", "0", "65535"] },
+    { "frame": "@ODOM,65535,0,0,0,0,20000,0*4103\n", "kind": "ODOM", "sequence": 65535, "fields": ["0", "0", "0", "0", "20000", "0"] },
+    { "frame": "@IMU,65535,-16000,16000,0,-2000000,2000000,0*91A2\n", "kind": "IMU", "sequence": 65535, "fields": ["-16000", "16000", "0", "-2000000", "2000000", "0"] },
+    { "frame": "@RANGE,0,0*D43A\n", "kind": "RANGE", "sequence": 0, "fields": ["0"] },
+    { "frame": "@RANGE,65535,2000*DAFA\n", "kind": "RANGE", "sequence": 65535, "fields": ["2000"] }
+  ],
+  "invalid": [
+    "@PING,0*0000\n",
+    "@CMD,1,+1,0*A189\n",
+    "@CMD,01,0,0*A714\n",
+    "noise\n",
+    "@UNKNOWN,1*44FA\n",
+    "@CMD,1,451,0*F6E6\n",
+    "@CMD,1,0,1801*7A8F\n",
+    "@ODOM,1,0,0,0,0,20001,0*3245\n",
+    "@ODOM,1,0,0,0,0,-1,0*292B\n",
+    "@RANGE,1,2001*1D80\n",
+    "@RANGE,1,-1*9410\n",
+    "@ERR,1,XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX*A8E0\n"
+  ]
+}

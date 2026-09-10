@@ -1,0 +1,14 @@
+{
+  "name": "Wildebeest Pro — ROS 2 Jazzy",
+  "build": { "dockerfile": "../../docker/ros2.Dockerfile", "context": "../.." },
+  "workspaceMount": "source=${localWorkspaceFolder},target=/wildebeest,type=bind,consistency=cached",
+  "workspaceFolder": "/wildebeest",
+  "postCreateCommand": "bash -lc 'source /opt/ros/jazzy/setup.bash && cd /wildebeest/ros2_ws && colcon build --symlink-install'",
+  "runArgs": ["--network=host"],
+  "containerEnv": { "ROS_DOMAIN_ID": "42" },
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-python.python", "ms-vscode.cpptools", "redhat.vscode-xml", "redhat.vscode-yaml"]
+    }
+  }
+}

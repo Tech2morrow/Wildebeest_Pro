@@ -1,0 +1,5 @@
+# Prefer a serial-number match for a production robot. These common Uno IDs are
+# provided as commissioning defaults and may also match unrelated boards.
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0043", GROUP="dialout", MODE="0660", SYMLINK+="wildebeest-base"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2a03", ATTRS{idProduct}=="0043", GROUP="dialout", MODE="0660", SYMLINK+="wildebeest-base"
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", GROUP="dialout", MODE="0660", SYMLINK+="wildebeest-base"

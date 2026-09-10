@@ -1,0 +1,16 @@
+**
+
+# Docker builds only need package sources and their shared entrypoint. Keeping
+# CAD, Git history, local toolchains, and generated artifacts out of the build
+# context saves hundreds of megabytes per invocation.
+!docker/
+!docker/**
+!ros1_ws/
+!ros1_ws/src/
+!ros1_ws/src/**
+!ros2_ws/
+!ros2_ws/src/
+!ros2_ws/src/**
+!tests/
+!tests/fixtures/
+!tests/fixtures/**

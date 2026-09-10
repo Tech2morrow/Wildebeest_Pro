@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="lidar" default="true"/>
+  <arg name="gps" default="true"/>
+  <arg name="camera" default="true"/>
+  <arg name="lidar_port" default="/dev/wildebeest-lidar"/>
+  <arg name="lidar_baud" default="115200"/>
+  <arg name="gps_port" default="/dev/wildebeest-gps"/>
+  <arg name="gps_baud" default="9600"/>
+  <arg name="camera_sensor_id" default="0"/>
+  <arg name="camera_width" default="1280"/>
+  <arg name="camera_height" default="720"/>
+  <arg name="camera_fps" default="30"/>
+
+  <group if="$(arg lidar)">
+    <node pkg="rplidar_ros" type="rplidarNode" name="lidar" output="screen">
+      <param name="serial_port" value="$(arg lidar_port)"/>
+      <param name="serial_baudrate" value="$(arg lidar_baud)"/>
+      <param name="frame_id" value="lidar_link"/>
+      <param name="inverted" value="false"/>
+      <param name="angle_compensate" value="true"/>
+      <remap from="scan" to="/scan"/>
+    </node>
+  </group>
+
+  <group if="$(arg gps)">
+    <node pkg="nmea_navsat_driver" type="nmea_serial_driver" name="gps" output="screen">
+      <param name="port" value="$(arg gps_port)"/>
+      <param name="baud" value="$(arg gps_baud)"/>
+      <param name="frame_id" value="gps_link"/>
+      <param name="time_ref_source" value="gps"/>
+      <remap from="fix" to="/gps/fix"/>
+      <remap from="vel" to="/gps/vel"/>
+      <remap from="time_reference" to="/gps/time_reference"/>
+    </node>
+  </group>
+
+  <group if="$(arg camera)">
+    <node pkg="gscam" type="gscam" name="imx219_camera" output="screen">
+      <env name="GSCAM_CONFIG" value="nvarguscamerasrc sensor-id=$(arg camera_sensor_id) ! video/x-raw(memory:NVMM),width=(int)$(arg camera_width),height=(int)$(arg camera_height),framerate=(fraction)$(arg camera_fps)/1 ! nvvidconv ! video/x-raw,format=(string)BGRx ! videoconvert ! video/x-raw,format=(string)BGR ! appsink drop=true sync=false"/>
+      <param name="camera_name" value="imx219"/>
+      <param name="camera_info_url" value=""/>
+      <param name="frame_id" value="camera_optical_frame"/>
+      <param name="sync_sink" value="false"/>
+      <remap from="camera/image_raw" to="/camera/image_raw"/>
+      <remap from="camera/camera_info" to="/camera/camera_info"/>
+    </node>
+  </group>
+</launch>

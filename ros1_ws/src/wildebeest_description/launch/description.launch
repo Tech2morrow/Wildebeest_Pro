@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="model" default="$(find wildebeest_description)/urdf/wildebeest.urdf.xacro"/>
+  <arg name="prefix" default=""/>
+  <arg name="use_sim" default="false"/>
+  <arg name="simulate_gps" default="false"/>
+  <arg name="publish_state_publisher" default="true"/>
+
+  <param name="robot_description"
+         command="$(find xacro)/xacro --inorder '$(arg model)' prefix:='$(arg prefix)' use_sim:='$(arg use_sim)' simulate_gps:='$(arg simulate_gps)'"/>
+  <node if="$(arg publish_state_publisher)" pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen">
+    <param name="publish_frequency" value="30.0"/>
+  </node>
+</launch>

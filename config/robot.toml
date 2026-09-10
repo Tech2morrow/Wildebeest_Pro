@@ -1,0 +1,43 @@
+[robot]
+name = "wildebeest_pro"
+model = "Wildebeest Pro"
+base_frame = "base_link"
+odom_frame = "odom"
+map_frame = "map"
+
+[kinematics]
+# Four-wheel skid-steer dimensions audited from the placed CAD mesh set.
+# They are starting values only: measure loaded radius and tune effective track.
+drive_layout = "four_wheel_skid_steer"
+wheel_radius_m = 0.033622
+wheel_width_m = 0.025065
+wheel_separation_m = 0.121843
+wheelbase_m = 0.117150
+encoder_ticks_per_revolution = 600
+parameters_verified = false
+
+[limits]
+max_linear_velocity_mps = 0.45
+max_angular_velocity_radps = 1.8
+max_linear_acceleration_mps2 = 0.6
+max_angular_acceleration_radps2 = 2.5
+
+[serial]
+baud = 115200
+linux_port = "/dev/wildebeest-base"
+windows_port = "COM4"
+watchdog_ms = 300
+
+[power]
+nominal_pack_voltage_v = 7.4
+warning_voltage_v = 6.8
+stop_voltage_v = 6.6
+stop_hysteresis_v = 0.15
+voltage_thresholds_verified = false
+
+[sensors]
+lidar_topic = "/scan"
+imu_topic = "/imu/data_raw"
+gps_topic = "/gps/fix"
+camera_topic = "/camera/image_raw"
+front_range_topic = "/range/front"

@@ -1,0 +1,52 @@
+Panels:
+  - Class: rviz/Displays
+    Name: Displays
+  - Class: rviz/Views
+    Name: Views
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Alpha: 0.55
+      Cell Size: 0.5
+      Class: rviz/Grid
+      Color: 70; 85; 100
+      Name: Ground grid
+      Plane: XY
+      Reference Frame: <Fixed Frame>
+    - Class: rviz/RobotModel
+      Description Source: Topic
+      Description Topic: /robot_description
+      Name: Wildebeest Pro
+      Visual Enabled: true
+      Collision Enabled: false
+    - Class: rviz/TF
+      Frame Timeout: 15
+      Marker Scale: 0.35
+      Name: Frames
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+  Enabled: true
+  Global Options:
+    Background Color: 12; 18; 25
+    Fixed Frame: base_link
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz/Interact
+    - Class: rviz/MoveCamera
+    - Class: rviz/Select
+    - Class: rviz/FocusCamera
+  Views:
+    Current:
+      Class: rviz/Orbit
+      Distance: 1.6
+      Focal Point:
+        X: 0
+        Y: 0
+        Z: 0.08
+      Pitch: 0.48
+      Yaw: 0.78
+Window Geometry:
+  Height: 900
+  Width: 1440

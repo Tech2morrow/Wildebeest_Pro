@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+title: "Wildebeest Pro"
+message: "If this platform helps your work, cite the repository and its original author."
+type: software
+authors:
+  - family-names: "Nabeel"
+    given-names: "Muhammed"
+license: MIT
+repository-code: "https://github.com/Tech2morrow/Wildebeest_Pro"
+url: "https://github.com/Tech2morrow/Wildebeest_Pro"
+version: 0.1.0
+date-released: 2026-09-10
+keywords:
+  - robotics
+  - ROS
+  - ROS 2
+  - autonomous mobile robot
+  - differential drive

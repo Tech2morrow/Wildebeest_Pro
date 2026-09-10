@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="use_gps" default="false"/>
+  <arg name="wheel_odom" default="/wheel/odometry"/>
+  <arg name="imu_topic" default="/imu/data_raw"/>
+  <arg name="gps_topic" default="/gps/fix"/>
+
+  <node pkg="robot_localization" type="ekf_localization_node" name="ekf_local" clear_params="true" output="screen">
+    <rosparam command="load" file="$(find wildebeest_navigation)/config/ekf_local.yaml"/>
+    <remap from="/wheel/odometry" to="$(arg wheel_odom)"/>
+    <remap from="/imu/data_raw" to="$(arg imu_topic)"/>
+  </node>
+
+  <group if="$(arg use_gps)">
+    <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform" clear_params="true" output="screen">
+      <rosparam command="load" file="$(find wildebeest_navigation)/config/navsat.yaml"/>
+      <remap from="imu/data" to="$(arg imu_topic)"/>
+      <remap from="gps/fix" to="$(arg gps_topic)"/>
+      <remap from="odometry/filtered" to="/odometry/filtered"/>
+      <remap from="odometry/gps" to="/odometry/gps"/>
+    </node>
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_global" clear_params="true" output="screen">
+      <rosparam command="load" file="$(find wildebeest_navigation)/config/ekf_global.yaml"/>
+      <remap from="odometry/filtered" to="/odometry/global"/>
+      <remap from="/imu/data_raw" to="$(arg imu_topic)"/>
+    </node>
+  </group>
+</launch>

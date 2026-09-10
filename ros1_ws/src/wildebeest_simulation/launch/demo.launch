@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="gui" default="true"/>
+  <arg name="rviz" default="true"/>
+  <arg name="navigation" default="true"/>
+  <arg name="joystick" default="false"/>
+  <arg name="map" default="$(find wildebeest_navigation)/config/maps/demo.yaml"/>
+
+  <include file="$(find wildebeest_simulation)/launch/gazebo.launch">
+    <arg name="gui" value="$(arg gui)"/>
+  </include>
+
+  <include file="$(find wildebeest_navigation)/launch/localization.launch">
+    <arg name="wheel_odom" value="/base_controller/odom"/>
+    <arg name="imu_topic" value="/imu/data_raw"/>
+  </include>
+
+  <include file="$(find wildebeest_bringup)/launch/teleop.launch">
+    <arg name="joystick" value="$(arg joystick)"/>
+    <arg name="output_cmd_vel" value="/base_controller/cmd_vel"/>
+  </include>
+
+  <include if="$(arg navigation)" file="$(find wildebeest_navigation)/launch/navigation.launch">
+    <arg name="map" value="$(arg map)"/>
+  </include>
+
+  <node if="$(arg rviz)" pkg="rviz" type="rviz" name="rviz" output="screen"
+        args="-d $(find wildebeest_simulation)/config/simulation.rviz"/>
+</launch>

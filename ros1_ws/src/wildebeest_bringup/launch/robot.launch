@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="use_sim" default="false"/>
+  <arg name="mock_base" default="$(arg use_sim)"/>
+  <arg name="base_port" default="/dev/wildebeest-base"/>
+  <arg name="sensors" default="$(eval arg('use_sim').lower() != 'true')"/>
+  <arg name="lidar" default="true"/>
+  <arg name="gps" default="true"/>
+  <arg name="camera" default="true"/>
+  <arg name="localization" default="true"/>
+  <arg name="use_gps_localization" default="false"/>
+  <arg name="navigation" default="false"/>
+  <arg name="mapping" default="false"/>
+  <arg name="teleop" default="true"/>
+  <arg name="joystick" default="$(eval arg('use_sim').lower() != 'true')"/>
+  <arg name="diagnostics" default="true"/>
+  <arg name="map" default="$(find wildebeest_navigation)/config/maps/demo.yaml"/>
+
+  <include file="$(find wildebeest_description)/launch/description.launch"/>
+  <include file="$(find wildebeest_base)/launch/base.launch">
+    <arg name="mock" value="$(arg mock_base)"/>
+    <arg name="port" value="$(arg base_port)"/>
+    <!-- EKF normally owns odom->base_link; raw base odometry owns it only
+         when localization is intentionally disabled. -->
+    <arg name="publish_odom_tf" value="$(eval arg('localization').lower() != 'true')"/>
+  </include>
+
+  <include if="$(arg sensors)" file="$(find wildebeest_bringup)/launch/sensors.launch">
+    <arg name="lidar" value="$(arg lidar)"/>
+    <arg name="gps" value="$(arg gps)"/>
+    <arg name="camera" value="$(arg camera)"/>
+  </include>
+
+  <include if="$(arg localization)" file="$(find wildebeest_navigation)/launch/localization.launch">
+    <!-- AMCL or GMapping must own map->odom when either is active. -->
+    <arg name="use_gps" value="$(eval arg('use_gps_localization').lower() == 'true' and arg('navigation').lower() != 'true' and arg('mapping').lower() != 'true')"/>
+  </include>
+
+  <include if="$(arg teleop)" file="$(find wildebeest_bringup)/launch/teleop.launch">
+    <arg name="joystick" value="$(arg joystick)"/>
+  </include>
+  <!-- Mapping takes precedence if both legacy booleans are set, preventing
+       AMCL and GMapping from publishing map->odom at the same time. -->
+  <include if="$(eval arg('navigation').lower() == 'true' and arg('mapping').lower() != 'true')" file="$(find wildebeest_navigation)/launch/navigation.launch">
+    <arg name="map" value="$(arg map)"/>
+  </include>
+  <include if="$(arg mapping)" file="$(find wildebeest_navigation)/launch/mapping.launch"/>
+  <include if="$(arg diagnostics)" file="$(find wildebeest_bringup)/launch/diagnostics.launch"/>
+</launch>

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 620" role="img" aria-labelledby="title desc">
+  <title id="title">Wildebeest Pro autonomous robot platform</title>
+  <desc id="desc">A stylized four-wheel skid-steer robot connected to perception, localization, navigation and control signals.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="620" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#06111d"/><stop offset=".55" stop-color="#0b2032"/><stop offset="1" stop-color="#06131f"/>
+    </linearGradient>
+    <linearGradient id="cyan" x1="530" y1="180" x2="1100" y2="500" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#68f7d3"/><stop offset="1" stop-color="#2aa9ff"/>
+    </linearGradient>
+    <linearGradient id="body" x1="610" y1="230" x2="1000" y2="500" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#e8f2f7"/><stop offset="1" stop-color="#829aaa"/>
+    </linearGradient>
+    <radialGradient id="glow"><stop stop-color="#2aa9ff" stop-opacity=".28"/><stop offset="1" stop-color="#2aa9ff" stop-opacity="0"/></radialGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%"><feGaussianBlur stdDeviation="16"/></filter>
+    <pattern id="grid" width="46" height="46" patternUnits="userSpaceOnUse"><path d="M46 0H0v46" fill="none" stroke="#75a7be" stroke-opacity=".07"/></pattern>
+  </defs>
+  <rect width="1600" height="620" rx="32" fill="url(#bg)"/>
+  <rect width="1600" height="620" rx="32" fill="url(#grid)"/>
+  <circle cx="850" cy="330" r="370" fill="url(#glow)"/>
+  <g font-family="Segoe UI,Arial,sans-serif">
+    <text x="92" y="150" fill="#68f7d3" font-size="24" font-weight="700" letter-spacing="5">OPEN ROBOTICS PLATFORM</text>
+    <text x="88" y="226" fill="#f4f9fc" font-size="70" font-weight="750">Wildebeest Pro</text>
+    <text x="92" y="278" fill="#a9c0ce" font-size="27">One robot. Two ROS generations.</text>
+    <g transform="translate(92 338)">
+      <rect width="164" height="48" rx="24" fill="#0f3040" stroke="#3ee4c5" stroke-opacity=".55"/><circle cx="26" cy="24" r="6" fill="#5df2d1"/><text x="44" y="32" fill="#dffbf4" font-size="21" font-weight="650">ROS 2 Jazzy</text>
+      <g transform="translate(178)"><rect width="174" height="48" rx="24" fill="#152a3f" stroke="#54bfff" stroke-opacity=".55"/><circle cx="26" cy="24" r="6" fill="#47b7ff"/><text x="44" y="32" fill="#e4f5ff" font-size="21" font-weight="650">ROS 1 Noetic</text></g>
+    </g>
+    <text x="92" y="458" fill="#7694a5" font-size="20">NAVIGATION  •  SENSOR FUSION  •  SIMULATION  •  SAFE BASE CONTROL</text>
+  </g>
+  <ellipse cx="1120" cy="510" rx="330" ry="54" fill="#02080d" opacity=".65" filter="url(#shadow)"/>
+  <g transform="translate(830 100)">
+    <g opacity=".75" fill="none" stroke-linecap="round">
+      <path d="M252 107C128 62 47 87-42 145" stroke="#45dabb" stroke-width="2" stroke-dasharray="5 13"/>
+      <path d="M275 111c92-66 189-75 280-39" stroke="#36aef5" stroke-width="2" stroke-dasharray="5 13"/>
+      <path d="M312 132c126 5 218 72 270 153" stroke="#e9b44c" stroke-width="2" stroke-dasharray="5 13"/>
+    </g>
+    <g fill="#0b1c28" stroke="#31566c"><circle cx="-42" cy="145" r="9"/><circle cx="555" cy="72" r="9"/><circle cx="582" cy="285" r="9"/></g>
+    <g transform="translate(70 155)">
+      <ellipse cx="255" cy="252" rx="230" ry="32" fill="#02080d" opacity=".58"/>
+      <g fill="#101a22" stroke="#314956" stroke-width="6"><circle cx="83" cy="210" r="59"/><circle cx="402" cy="210" r="59"/></g>
+      <g fill="#22333e"><circle cx="83" cy="210" r="31"/><circle cx="402" cy="210" r="31"/></g>
+      <path d="M52 102l80-49h225l91 54-40 118H87z" fill="url(#body)" stroke="#d7e7ed" stroke-width="4"/>
+      <path d="M132 53l40-46h142l43 46" fill="#193142" stroke="#4f7081" stroke-width="4"/>
+      <path d="M176 6h135v45H176z" fill="#102333"/>
+      <g transform="translate(243 -24)"><ellipse rx="53" ry="17" fill="#2a475a"/><rect x="-39" y="-16" width="78" height="19" rx="5" fill="#284356"/><ellipse cy="-16" rx="39" ry="13" fill="url(#cyan)"/><ellipse cy="-16" rx="14" ry="5" fill="#06121b"/></g>
+      <path d="M136 92h216l42 29-22 65H111l-18-63z" fill="#0e2432" stroke="#45687a" stroke-width="3"/>
+      <rect x="164" y="110" width="120" height="58" rx="8" fill="#173f39" stroke="#56d7bc"/><path d="M181 133h68M181 146h44" stroke="#67f3d3" stroke-width="5" stroke-linecap="round"/>
+      <g transform="translate(317 124)"><rect width="46" height="34" rx="7" fill="#07141e"/><circle cx="23" cy="17" r="11" fill="#1d84bd"/><circle cx="23" cy="17" r="5" fill="#8de3ff"/></g>
+      <path d="M81 188h328" stroke="url(#cyan)" stroke-width="7" stroke-linecap="round"/>
+      <g fill="#f3be4b"><circle cx="117" cy="132" r="8"/><circle cx="383" cy="132" r="8"/></g>
+    </g>
+    <g font-family="Segoe UI,Arial,sans-serif" font-size="17" font-weight="650">
+      <g transform="translate(-105 126)"><rect width="150" height="38" rx="19" fill="#0c2631" stroke="#36cdb1"/><text x="20" y="25" fill="#bdf8ea">2D LiDAR</text></g>
+      <g transform="translate(514 45)"><rect width="150" height="38" rx="19" fill="#10283a" stroke="#349fe0"/><text x="20" y="25" fill="#c9edff">IMU + GPS</text></g>
+      <g transform="translate(548 268)"><rect width="164" height="38" rx="19" fill="#2b2415" stroke="#c89736"/><text x="20" y="25" fill="#ffe3a5">Vision + range</text></g>
+    </g>
+  </g>
+</svg>

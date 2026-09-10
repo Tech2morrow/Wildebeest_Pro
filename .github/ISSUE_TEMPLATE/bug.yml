@@ -1,0 +1,37 @@
+name: Bug report
+description: Reproducible software, simulation or hardware-integration defect
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: dropdown
+    id: evidence
+    attributes:
+      label: Test level
+      options: [Unit/static test, Simulation, Bench electronics, Raised wheels, Floor test]
+    validations: { required: true }
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, ROS distribution, commit, controller and relevant sensor models
+    validations: { required: true }
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+    validations: { required: true }
+  - type: textarea
+    id: expected
+    attributes: { label: Expected behavior }
+    validations: { required: true }
+  - type: textarea
+    id: actual
+    attributes: { label: Actual behavior and sanitized logs }
+    validations: { required: true }
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I removed location, camera, credential and private network data from the report.
+          required: true

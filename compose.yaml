@@ -1,0 +1,16 @@
+services:
+  ros2-mock:
+    profiles: ["ros2"]
+    build:
+      context: .
+      dockerfile: docker/ros2.Dockerfile
+    environment:
+      ROS_DOMAIN_ID: "42"
+    command: ["ros2", "launch", "wildebeest_bringup", "robot.launch.py", "use_sim:=true"]
+
+  ros1-mock:
+    profiles: ["ros1"]
+    build:
+      context: .
+      dockerfile: docker/ros1.Dockerfile
+    command: ["roslaunch", "wildebeest_bringup", "robot.launch", "use_sim:=true"]

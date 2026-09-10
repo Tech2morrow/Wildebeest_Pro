@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#07131f">
+  <title>Wildebeest Control</title>
+  <link rel="icon" href="/assets/wildebeest-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/dashboard/styles.css">
+</head>
+<body>
+  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
+  <header class="topbar">
+      <a class="brand" href="/" aria-label="Wildebeest Pro home">
+      <img src="/assets/wildebeest-mark.svg" alt="">
+      <span><strong>Wildebeest</strong><small>CONTROL / PRO</small></span>
+    </a>
+    <form id="connection-form" class="connection">
+      <label class="sr-only" for="endpoint">rosbridge WebSocket endpoint</label>
+      <span id="connection-dot" class="status-dot"></span>
+      <input id="endpoint" value="ws://localhost:9090" spellcheck="false" autocomplete="off">
+      <select id="ros-major" aria-label="ROS version"><option value="2">ROS 2</option><option value="1">ROS 1</option></select>
+      <button id="connect" class="button subtle" type="submit">Connect</button>
+    </form>
+    <button id="estop" class="estop" type="button"><span></span>Emergency stop</button>
+  </header>
+
+  <main>
+    <section class="intro">
+      <div><p class="eyebrow">LIVE ROBOT TELEMETRY</p><h1>Mission control</h1><p id="mission-state">Waiting for rosbridge</p></div>
+      <div class="clock"><span id="clock">--:--:--</span><small>LOCAL TIME</small></div>
+    </section>
+
+    <section class="metrics" aria-label="Robot metrics">
+      <article class="metric battery-card"><div class="metric-head"><span>Battery</span><i id="battery-health">NO DATA</i></div><div class="battery-row"><strong id="battery-percent">--</strong><span class="unit">%</span><div class="battery"><div id="battery-fill"></div></div></div><p><span id="battery-voltage">--.--</span> V bus</p></article>
+      <article class="metric"><div class="metric-head"><span>Linear speed</span><i id="odom-source">NO DATA</i></div><div><strong id="linear-speed">0.00</strong><span class="unit">m/s</span></div><p>Command <span id="linear-command">0.00</span> m/s</p></article>
+      <article class="metric"><div class="metric-head"><span>Turn rate</span><i>IMU</i></div><div><strong id="turn-rate">0.00</strong><span class="unit">rad/s</span></div><p>Heading <span id="heading">0.0</span>°</p></article>
+      <article class="metric"><div class="metric-head"><span>Front clearance</span><i>SONAR</i></div><div><strong id="range-front">--</strong><span class="unit">m</span></div><p id="range-state">Waiting for sample</p></article>
+    </section>
+
+    <section class="workspace">
+      <article class="panel map-panel">
+        <header><div><p class="eyebrow">PERCEPTION</p><h2>Local scan</h2></div><span class="live-pill"><b></b>LIVE</span></header>
+        <div class="map-wrap"><canvas id="scan-canvas" aria-label="LiDAR scan visualization"></canvas><div class="map-scale"><span>5 m</span><span>2.5 m</span><span>0 m</span></div><div class="pose"><span>X <b id="pose-x">0.00</b></span><span>Y <b id="pose-y">0.00</b></span><span>θ <b id="pose-yaw">0.0°</b></span></div></div>
+      </article>
+
+      <article class="panel drive-panel">
+        <header><div><p class="eyebrow">MANUAL OVERRIDE</p><h2>Drive</h2></div><kbd>SPACE</kbd></header>
+        <p class="hint">Hold the pad or use W A S D. Releasing it sends zero velocity.</p>
+        <div id="joystick" class="joystick" role="application" aria-label="Dead-man drive control"><div class="crosshair"></div><div id="stick" class="stick"><span></span></div><small>HOLD TO DRIVE</small></div>
+        <div class="slider-row"><label for="speed-limit">Speed limit</label><output id="speed-output">0.30 m/s</output></div>
+        <input id="speed-limit" class="slider" type="range" min="0.05" max="0.45" step="0.05" value="0.30">
+        <div class="slider-row"><label for="turn-limit">Turn limit</label><output id="turn-output">1.20 rad/s</output></div>
+        <input id="turn-limit" class="slider" type="range" min="0.2" max="1.8" step="0.2" value="1.2">
+      </article>
+
+      <article class="panel systems-panel">
+        <header><div><p class="eyebrow">HEALTH</p><h2>Systems</h2></div><button id="settings" class="icon-button" aria-label="Camera settings">•••</button></header>
+        <ul class="systems">
+          <li data-topic="odom_filtered"><span class="system-icon">OD</span><div><strong>Fused odometry</strong><small>/odometry/filtered</small></div><i>OFFLINE</i></li>
+          <li data-topic="scan"><span class="system-icon">LD</span><div><strong>2D LiDAR</strong><small>/scan</small></div><i>OFFLINE</i></li>
+          <li data-topic="imu"><span class="system-icon">IM</span><div><strong>Inertial unit</strong><small>/imu/data_raw</small></div><i>OFFLINE</i></li>
+          <li data-topic="gps"><span class="system-icon">GP</span><div><strong>GNSS receiver</strong><small>/gps/fix</small></div><i>OFFLINE</i></li>
+          <li data-topic="range"><span class="system-icon">US</span><div><strong>Front range</strong><small>/range/front</small></div><i>OFFLINE</i></li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="lower-grid">
+      <article class="panel camera-panel"><header><div><p class="eyebrow">VISION</p><h2>Forward camera</h2></div><span id="camera-state">STREAM OFF</span></header><div class="camera-view"><img id="camera-stream" alt="Forward camera stream"><div id="camera-empty"><span>◉</span><p>Add a web_video_server URL in camera settings</p></div><div class="reticle"></div></div></article>
+      <article class="panel event-panel"><header><div><p class="eyebrow">DIAGNOSTICS</p><h2>Event log</h2></div><button id="clear-log" class="text-button">Clear</button></header><ol id="event-log"><li><time>--:--:--</time><span>Dashboard ready</span></li></ol></article>
+    </section>
+  </main>
+
+  <dialog id="settings-dialog">
+    <form method="dialog"><header><div><p class="eyebrow">STREAM SOURCE</p><h2>Camera settings</h2></div><button value="cancel" class="icon-button" aria-label="Close">×</button></header><label for="camera-url">web_video_server stream URL</label><input id="camera-url" placeholder="http://robot.local:8080/stream?topic=/camera/image_raw"><p>The URL stays in this browser only. No telemetry is sent anywhere except your selected rosbridge endpoint.</p><menu><button value="cancel" class="button subtle">Cancel</button><button id="save-camera" value="default" class="button primary">Apply stream</button></menu></form>
+  </dialog>
+
+  <footer><span>WILDEBEEST PRO / OPERATOR UI</span><span>Dead-man control enabled · Command timeout 300 ms</span></footer>
+  <script type="module" src="/dashboard/app.js"></script>
+</body>
+</html>

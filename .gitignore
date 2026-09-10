@@ -1,0 +1,49 @@
+# ROS / colcon / catkin
+build/
+install/
+log/
+devel/
+.catkin_tools/
+ros1_ws/build/
+ros1_ws/devel/
+ros1_ws/logs/
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+
+# Firmware
+.pio/
+firmware/**/.pio/
+
+# Python / test tooling
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+.tooling/
+.artifact_runtime/
+
+# Documentation output
+site/
+docs/site/
+
+# Editors and OS
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Runtime data
+*.bag
+*.bag.active
+*.db3
+*.mcap
+maps/*.pgm
+maps/*.yaml
+!maps/example.yaml
+logs/

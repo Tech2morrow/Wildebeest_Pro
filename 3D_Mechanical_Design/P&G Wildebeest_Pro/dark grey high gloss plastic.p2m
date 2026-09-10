@@ -1,19 +1,3 @@
-shader "top_name"  "top_mtl"  
-(
-	 "num_cols"  1 ,
-	 "illum"  "model_3.p2a" 
-)
-
-material "iii"  "swt_main_phen"  
-(
-	 "col1"  0.296875 0.296875 0.296875 ,
-	 "ambient_factor"  0.5 ,
-	 "diffuse_factor"  0.8 ,
-	 "specular_factor"  0.8 ,
-	 "specular_color"  1 1 1 ,
-	 "exponent"  75 ,
-	 "reflectivity"  0.2 ,
-	 "transparency"  0 ,
-	 "sw_shader"	 darkgreyhighglossplastic
-)
-end material 
+version https://git-lfs.github.com/spec/v1
+oid sha256:59fa6b3ab807112ef8a95724196504267abee6b2a52e365c6a20f77a321b7e9f
+size 383

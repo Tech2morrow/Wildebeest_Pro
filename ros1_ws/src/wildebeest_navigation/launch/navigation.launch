@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="map" default="$(find wildebeest_navigation)/config/maps/demo.yaml"/>
+  <arg name="scan_topic" default="/scan"/>
+  <arg name="cmd_vel_topic" default="/cmd_vel_nav"/>
+
+  <node pkg="map_server" type="map_server" name="map_server" args="$(arg map)"/>
+
+  <node pkg="amcl" type="amcl" name="amcl" clear_params="true" output="screen">
+    <rosparam command="load" file="$(find wildebeest_navigation)/config/amcl.yaml"/>
+    <remap from="scan" to="$(arg scan_topic)"/>
+  </node>
+
+  <node pkg="move_base" type="move_base" name="move_base" clear_params="true" output="screen" required="true">
+    <rosparam command="load" file="$(find wildebeest_navigation)/config/move_base.yaml"/>
+    <rosparam command="load" file="$(find wildebeest_navigation)/config/dwa_local_planner.yaml"/>
+    <rosparam command="load" file="$(find wildebeest_navigation)/config/costmap_common.yaml" ns="global_costmap"/>
+    <rosparam command="load" file="$(find wildebeest_navigation)/config/costmap_common.yaml" ns="local_costmap"/>
+    <rosparam command="load" file="$(find wildebeest_navigation)/config/global_costmap.yaml"/>
+    <rosparam command="load" file="$(find wildebeest_navigation)/config/local_costmap.yaml"/>
+    <remap from="cmd_vel" to="$(arg cmd_vel_topic)"/>
+    <remap from="scan" to="$(arg scan_topic)"/>
+  </node>
+</launch>

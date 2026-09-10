@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="config" default="$(find wildebeest_base)/config/base.yaml"/>
+  <arg name="mock" default="false"/>
+  <arg name="port" default="/dev/wildebeest-base"/>
+  <arg name="odom_topic" default="/wheel/odometry"/>
+  <arg name="publish_odom_tf" default="false"/>
+
+  <node pkg="wildebeest_base" type="serial_bridge_node.py" name="base_serial_bridge" output="screen" required="true">
+    <rosparam command="load" file="$(arg config)"/>
+    <param name="transport" value="$(eval 'mock' if arg('mock').lower() == 'true' else 'serial')"/>
+    <param name="port" value="$(arg port)"/>
+    <param name="publish_odom_tf" value="$(arg publish_odom_tf)"/>
+    <remap from="wheel/odometry" to="$(arg odom_topic)"/>
+  </node>
+</launch>

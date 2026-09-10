@@ -1,0 +1,27 @@
+# CAD cover plus a small commissioning margin; verify every real protrusion.
+footprint: [[-0.135, -0.080], [-0.135, 0.080], [0.135, 0.080], [0.135, -0.080]]
+transform_tolerance: 0.35
+map_type: costmap
+
+obstacle_layer:
+  enabled: true
+  observation_sources: lidar
+  lidar:
+    data_type: LaserScan
+    topic: /scan
+    sensor_frame: lidar_link
+    marking: true
+    clearing: true
+    obstacle_range: 4.5
+    raytrace_range: 5.5
+    inf_is_valid: true
+
+inflation_layer:
+  enabled: true
+  inflation_radius: 0.30
+  cost_scaling_factor: 3.0
+
+static_layer:
+  enabled: true
+  map_topic: /map
+  subscribe_to_updates: true

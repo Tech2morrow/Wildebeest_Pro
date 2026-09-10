@@ -1,0 +1,35 @@
+# CAD-derived nominal geometry, not calibrated driving parameters. Four-wheel
+# skid-steer scrub usually makes the effective separation differ from CAD track.
+port: /dev/wildebeest-base
+baud: 115200
+transport: serial
+
+wheel_radius_m: 0.033622
+wheel_width_m: 0.025065
+wheel_separation_m: 0.121843
+wheelbase_m: 0.117150
+encoder_ticks_per_revolution: 600
+max_encoder_tick_delta: 1200
+left_wheel_joint_names: [front_left_wheel_joint, rear_left_wheel_joint]
+right_wheel_joint_names: [front_right_wheel_joint, rear_right_wheel_joint]
+
+command_rate_hz: 20.0
+cmd_vel_timeout_s: 0.25
+mcu_watchdog_s: 0.30
+reconnect_delay_s: 2.0
+require_estop_clear_after_boot: true
+max_linear_m_s: 0.45
+max_angular_rad_s: 1.80
+
+odom_frame: odom
+base_frame: base_link
+imu_frame: imu_link
+range_frame: ultrasonic_front_link
+publish_odom_tf: false
+
+front_range_min_m: 0.02
+front_range_max_m: 2.00
+front_range_field_of_view_rad: 0.26
+
+pose_covariance_diagonal: [0.05, 0.05, 99999.0, 99999.0, 99999.0, 0.10]
+twist_covariance_diagonal: [0.08, 0.08, 99999.0, 99999.0, 99999.0, 0.15]
