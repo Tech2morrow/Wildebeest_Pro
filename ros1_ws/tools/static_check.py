@@ -91,6 +91,12 @@ def validate_demo_map():
 
 
 def validate_canonical_defaults():
+    workspace_cmake = (SOURCE / "CMakeLists.txt").read_text(encoding="utf-8")
+    if "set(CATKIN_TOPLEVEL_FIND_PACKAGE TRUE)" not in workspace_cmake:
+        fail("ROS 1 workspace must use catkin's top-level discovery mode")
+    if "find_package(catkin REQUIRED NO_POLICY_SCOPE)" not in workspace_cmake:
+        fail("ROS 1 workspace must discover catkin without leaking CMake policies")
+
     expected = {
         "wildebeest_base/config/base.yaml": (
             "wheel_radius_m: 0.033622",

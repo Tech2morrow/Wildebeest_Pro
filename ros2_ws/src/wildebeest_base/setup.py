@@ -16,6 +16,7 @@ setup(
         ('share/' + package_name + '/launch', glob('launch/*.launch.py')),
     ],
     install_requires=['setuptools', 'pyserial'],
+    tests_require=['pytest'],
     zip_safe=True,
     maintainer='Wildebeest Pro maintainers',
     maintainer_email='maintainers@wildebeest-pro.org',

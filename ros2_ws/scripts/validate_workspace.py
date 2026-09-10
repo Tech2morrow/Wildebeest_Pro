@@ -49,6 +49,12 @@ def validate_manifests(errors):
             errors.append(f'duplicate package name: {name}')
         names.add(name)
 
+    base_setup = (SOURCE / 'wildebeest_base' / 'setup.py').read_text(
+        encoding='utf-8'
+    )
+    if "tests_require=['pytest']" not in base_setup:
+        errors.append('wildebeest_base setup.py must register its pytest suite')
+
 
 def validate_yaml(errors):
     """Require PyYAML and load every workspace YAML document."""
