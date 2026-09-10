@@ -104,7 +104,7 @@
   <link name="${prefix}lidar_link">
     <visual>
       <geometry><cylinder radius="0.047" length="0.055"/></geometry>
-      <material name="wildebeest_graphite"/>
+      <material name="wildebeest_sensor_lidar_orange"/>
     </visual>
     <collision><geometry><cylinder radius="0.047" length="0.055"/></geometry></collision>
     <xacro:cylinder_inertial mass="0.18" radius="0.047" length="0.055"/>
@@ -118,7 +118,7 @@
   <link name="${prefix}imu_link">
     <visual>
       <geometry><box size="0.022 0.017 0.004"/></geometry>
-      <material name="wildebeest_red"/>
+      <material name="wildebeest_sensor_imu_rose"/>
     </visual>
     <xacro:box_inertial mass="0.003" x="0.022" y="0.017" z="0.004"/>
   </link>
@@ -131,7 +131,7 @@
   <link name="${prefix}gps_link">
     <visual>
       <geometry><box size="0.035 0.025 0.008"/></geometry>
-      <material name="wildebeest_green"/>
+      <material name="wildebeest_sensor_gnss_yellow"/>
     </visual>
     <xacro:box_inertial mass="0.012" x="0.035" y="0.025" z="0.008"/>
   </link>
@@ -144,7 +144,7 @@
   <link name="${prefix}camera_link">
     <visual>
       <geometry><box size="0.025 0.032 0.032"/></geometry>
-      <material name="wildebeest_graphite"/>
+      <material name="wildebeest_sensor_camera_sky"/>
     </visual>
     <collision><geometry><box size="0.025 0.032 0.032"/></geometry></collision>
     <xacro:box_inertial mass="0.018" x="0.025" y="0.032" z="0.032"/>
@@ -165,7 +165,7 @@
     <visual>
       <origin rpy="0 ${pi / 2.0} 0"/>
       <geometry><cylinder radius="0.019" length="0.015"/></geometry>
-      <material name="wildebeest_silver"/>
+      <material name="wildebeest_sensor_ultrasonic_vermillion"/>
     </visual>
     <xacro:cylinder_inertial mass="0.009" radius="0.019" length="0.015" origin_rpy="0 ${pi / 2.0} 0"/>
   </link>

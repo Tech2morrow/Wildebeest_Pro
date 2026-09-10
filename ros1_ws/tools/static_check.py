@@ -180,6 +180,114 @@ def validate_canonical_defaults():
         fail("PONG must never open the motion gate")
 
 
+def validate_sensor_visual_palette():
+    expected = {
+        "lidar_link": (
+            "sensor_lidar_orange",
+            "0.902 0.624 0.000 1.0",
+            "Wildebeest/SensorLidarOrange",
+            "| Orange `#E69F00` | 2D LiDAR | `lidar_link` |",
+        ),
+        "camera_link": (
+            "sensor_camera_sky_blue",
+            "0.337 0.706 0.914 1.0",
+            "Wildebeest/SensorCameraSkyBlue",
+            "| Sky blue `#56B4E9` | IMX219 camera | `camera_link` (`camera_optical_frame` is axis-only) |",
+        ),
+        "imu_link": (
+            "sensor_imu_rose",
+            "0.800 0.475 0.655 1.0",
+            "Wildebeest/SensorImuRose",
+            "| Rose `#CC79A7` | MPU6050 IMU | `imu_link` |",
+        ),
+        "gps_link": (
+            "sensor_gnss_yellow",
+            "0.941 0.894 0.259 1.0",
+            "Wildebeest/SensorGnssYellow",
+            "| Yellow `#F0E442` | GNSS receiver | `gps_link` |",
+        ),
+        "ultrasonic_front_link": (
+            "sensor_ultrasonic_vermillion",
+            "0.835 0.369 0.000 1.0",
+            "Wildebeest/SensorUltrasonicVermillion",
+            "| Vermillion `#D55E00` | Front HC-SR04 ultrasonic sensor | `ultrasonic_front_link` |",
+        ),
+    }
+
+    materials_root = ET.parse(
+        str(SOURCE / "wildebeest_description/urdf/materials.xacro")
+    ).getroot()
+    material_colors = {}
+    for material in materials_root.findall("material"):
+        color = material.find("color")
+        if color is not None:
+            material_colors[material.attrib["name"]] = color.attrib.get("rgba")
+
+    sensor_colors = []
+    for material_name, rgba, _, _ in expected.values():
+        if material_colors.get(material_name) != rgba:
+            fail("{} must define sensor color {}".format(material_name, rgba))
+        sensor_colors.append(rgba)
+    if len(sensor_colors) != len(set(sensor_colors)):
+        fail("sensor identification colors must be unique")
+
+    urdf_root = ET.parse(
+        str(SOURCE / "wildebeest_description/urdf/wildebeest.urdf.xacro")
+    ).getroot()
+    urdf_links = {link.attrib.get("name"): link for link in urdf_root.findall("link")}
+    for link_name, (material_name, _, _, _) in expected.items():
+        link = urdf_links.get("${prefix}" + link_name)
+        material = None if link is None else link.find("visual/material")
+        if material is None or material.attrib.get("name") != material_name:
+            fail("{} must use {}".format(link_name, material_name))
+
+    gazebo_root = ET.parse(
+        str(SOURCE / "wildebeest_description/urdf/wildebeest.gazebo.xacro")
+    ).getroot()
+    gazebo_materials = {}
+    for gazebo in gazebo_root.iter("gazebo"):
+        reference = gazebo.attrib.get("reference")
+        material = gazebo.find("material")
+        if reference and material is not None:
+            gazebo_materials[reference] = (material.text or "").strip()
+    for link_name, (_, _, gazebo_material, _) in expected.items():
+        if gazebo_materials.get("${prefix}" + link_name) != gazebo_material:
+            fail("Gazebo {} must use {}".format(link_name, gazebo_material))
+
+    classic_materials = (
+        SOURCE
+        / "wildebeest_description/media/materials/scripts/wildebeest.material"
+    ).read_text(encoding="utf-8")
+    for link_name, (_, rgba, gazebo_material, _) in expected.items():
+        material_match = re.search(
+            r"material\s+{}\s*\{{(.*?)\n\}}".format(re.escape(gazebo_material)),
+            classic_materials,
+            re.DOTALL,
+        )
+        if material_match is None:
+            fail("Gazebo material script is missing {}".format(gazebo_material))
+        body = material_match.group(1)
+        if "ambient " + rgba not in body or "diffuse " + rgba not in body:
+            fail("Gazebo {} does not match the URDF RGBA".format(link_name))
+
+    description_manifest = ET.parse(
+        str(SOURCE / "wildebeest_description/package.xml")
+    ).getroot()
+    media_export = description_manifest.find("./export/gazebo_ros")
+    if media_export is None or media_export.attrib.get("gazebo_media_path") != "${prefix}":
+        fail("wildebeest_description must export its Gazebo media path")
+    description_cmake = (
+        SOURCE / "wildebeest_description/CMakeLists.txt"
+    ).read_text(encoding="utf-8")
+    if "install(DIRECTORY launch media rviz urdf" not in description_cmake:
+        fail("wildebeest_description must install its Gazebo material media")
+
+    workspace_readme = (WORKSPACE / "README.md").read_text(encoding="utf-8")
+    for link_name, (_, _, _, documented_row) in expected.items():
+        if documented_row not in workspace_readme:
+            fail("sensor legend is missing {}".format(link_name))
+
+
 def validate_wheel_joint_parity():
     urdf = (SOURCE / "wildebeest_description/urdf/wildebeest.urdf.xacro").read_text(
         encoding="utf-8"
@@ -250,6 +358,7 @@ def main():
     reference_count = validate_local_find_references(packages)
     validate_demo_map()
     validate_canonical_defaults()
+    validate_sensor_visual_palette()
     validate_wheel_joint_parity()
     python_count = validate_python_syntax()
     print(

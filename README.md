@@ -108,6 +108,18 @@ flowchart LR
 
 All command sources pass through arbitration. The base bridge will not move until it receives the exact firmware boot identity, an E-stop release cannot replay an old command, and both hardware and simulation paths stop on stale velocity input. See the [interface contract](docs/software/interfaces.md) and [serial protocol](docs/reference/serial-protocol.md).
 
+### Sensor identification palette
+
+The same high-contrast palette is applied to sensor visuals in ROS 1, ROS 2, RViz, Gazebo, and the CAD showcase. Colors identify hardware only; they never indicate live health or status.
+
+| Sensor | Visual color | Hex |
+|---|---|---|
+| 2D LiDAR | Orange | `#E69F00` |
+| MPU6050 IMU | Rose | `#CC79A7` |
+| GNSS receiver | Yellow | `#F0E442` |
+| IMX219 camera | Sky blue | `#56B4E9` |
+| Front ultrasonic | Vermillion | `#D55E00` |
+
 ## Firmware, dashboard, and documentation
 
 Build the Arduino Uno firmware with PlatformIO:

@@ -7,6 +7,18 @@ Jetson and Arduino representations, plus `lidar_link`, `imu_link`,
 `gps_link`, `camera_link`, `camera_optical_frame`, and
 `ultrasonic_front_link`.
 
+Sensor housings use a high-contrast, color-blind-conscious visual key that is
+shared by RViz and Gazebo. These colors are visualization aids only; collision
+geometry remains uncolored and unchanged.
+
+| Sensor | Link | Visual color |
+| --- | --- | --- |
+| 2D LiDAR | `lidar_link` | Orange (`#E69F00`) |
+| MPU6050 IMU | `imu_link` | Reddish purple (`#CC79A7`) |
+| NEO-6M GNSS | `gps_link` | Yellow (`#F0E442`) |
+| IMX219 camera | `camera_link` | Sky blue (`#56B4E9`) |
+| HC-SR04 front range | `ultrasonic_front_link` | Vermillion (`#D55E00`) |
+
 Preview it with:
 
 ```bash

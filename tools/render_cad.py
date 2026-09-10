@@ -14,7 +14,6 @@ must not be used as a source of calibrated transforms.
 from __future__ import annotations
 
 import argparse
-import math
 import sys
 from pathlib import Path
 
@@ -29,7 +28,7 @@ MM_TO_M = 0.001
 
 
 def arguments() -> argparse.Namespace:
-    argv = sys.argv[sys.argv.index("--") + 1 :] if "--" in sys.argv else []
+    argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", default="assets/cad-render.png")
     parser.add_argument("--samples", type=int, default=64)
@@ -51,10 +50,16 @@ def choose_material(filename: str, palette: dict[str, object]):
     if any(token in name for token in ("bottom_cover", "top_cover", "support_")):
         return palette["body"]
     if any(token in name for token in ("lidar", "radar")):
-        return palette["sensor"]
-    if any(token in name for token in ("camera", "imx219", "ultrasonic")):
-        return palette["optic"]
-    if any(token in name for token in ("jetson", "arduino", "l298n", "gps", "mpu 6050", "pcb")):
+        return palette["sensor_lidar"]
+    if any(token in name for token in ("mpu 6050", "imu")):
+        return palette["sensor_imu"]
+    if any(token in name for token in ("gps", "gnss", "neo-6", "neo 6")):
+        return palette["sensor_gnss"]
+    if any(token in name for token in ("camera", "imx219")):
+        return palette["sensor_camera"]
+    if any(token in name for token in ("ultrasonic", "ultrasound", "hc-sr04", "hc sr04")):
+        return palette["sensor_ultrasonic"]
+    if any(token in name for token in ("jetson", "arduino", "l298n", "pcb")):
         return palette["electronics"]
     if any(token in name for token in ("battery", "18650")):
         return palette["battery"]
@@ -81,8 +86,13 @@ def main() -> None:
     palette = {
         "body": material("Wildebeest teal", (0.015, 0.34, 0.38, 1.0), metallic=0.45, roughness=0.24),
         "rubber": material("Tire rubber", (0.012, 0.018, 0.024, 1.0), roughness=0.72),
-        "sensor": material("LiDAR amber", (1.0, 0.27, 0.035, 1.0), metallic=0.12, roughness=0.25),
-        "optic": material("Optics", (0.018, 0.055, 0.075, 1.0), metallic=0.28, roughness=0.18),
+        # Match the semantic ROS 1/ROS 2 sensor palette.  These colors are
+        # identification aids only; they never encode live health or state.
+        "sensor_lidar": material("Sensor - LiDAR orange", (0.902, 0.624, 0.000, 1.0), metallic=0.12, roughness=0.25),
+        "sensor_imu": material("Sensor - IMU rose", (0.800, 0.475, 0.655, 1.0), metallic=0.08, roughness=0.34),
+        "sensor_gnss": material("Sensor - GNSS yellow", (0.941, 0.894, 0.259, 1.0), metallic=0.08, roughness=0.34),
+        "sensor_camera": material("Sensor - camera sky", (0.337, 0.706, 0.914, 1.0), metallic=0.18, roughness=0.22),
+        "sensor_ultrasonic": material("Sensor - ultrasonic vermillion", (0.835, 0.369, 0.000, 1.0), metallic=0.10, roughness=0.28),
         "electronics": material("Electronics", (0.05, 0.48, 0.34, 1.0), metallic=0.08, roughness=0.42),
         "battery": material("Battery", (0.28, 0.34, 0.40, 1.0), metallic=0.35, roughness=0.3),
         "cable": material("Cables", (0.025, 0.032, 0.045, 1.0), roughness=0.65),

@@ -108,6 +108,20 @@ odometry yaw and requires deliberate field validation.
 
 Frames are `map -> odom -> base_link`, with `lidar_link`, `imu_link`, `gps_link`, `camera_link`/`camera_optical_frame`, `ultrasonic_front_link`, four wheel links, and a convenience `base_footprint` below `base_link`.
 
+### Sensor visualization legend
+
+The ROS 1 URDF and Gazebo Classic model use the same high-contrast palette so individual sensor housings remain easy to find against the blue/teal chassis:
+
+| Color | Sensor | Link / frame |
+| --- | --- | --- |
+| Orange `#E69F00` | 2D LiDAR | `lidar_link` |
+| Rose `#CC79A7` | MPU6050 IMU | `imu_link` |
+| Yellow `#F0E442` | GNSS receiver | `gps_link` |
+| Sky blue `#56B4E9` | IMX219 camera | `camera_link` (`camera_optical_frame` is axis-only) |
+| Vermillion `#D55E00` | Front HC-SR04 ultrasonic sensor | `ultrasonic_front_link` |
+
+These colors are visual identifiers only. They do not indicate readiness, diagnostics, range validity, or safety state; use topics, frame names, and `/diagnostics` as the authoritative runtime sources.
+
 For a legacy consumer that requires `/odom`, set `odom_topic:=/odom` when including `wildebeest_base/launch/base.launch`. Do not expose both names as independently published odometry, and keep `publish_odom_tf:=false` whenever the EKF owns the transform.
 
 Velocity producers publish to `/cmd_vel_nav`, `/cmd_vel/remote`, `/cmd_vel_keyboard`, or `/cmd_vel_joy`; `twist_mux` is the only normal owner of `/cmd_vel`. Priority is navigation < remote < keyboard < joystick, and remote/local teleoperation expires after 0.35 s. The joystick requires a held enable button. Any MCU hard/software-stop flag latches a host stop. After an explicit clear, the bridge waits for clean ODOM stop flags, discards cached velocity again, and requires a fresh command. A hard-wired, normally closed motor-power emergency stop remains required—software topics and the Arduino watchdog are additional layers, not substitutes.

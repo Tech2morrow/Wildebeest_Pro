@@ -14,5 +14,9 @@
   <exec_depend>joint_state_publisher_gui</exec_depend>
   <exec_depend>rviz</exec_depend>
 
-  <export/>
+  <export>
+    <!-- Makes media/materials/scripts available to Gazebo Classic through
+         GAZEBO_RESOURCE_PATH when gazebo_ros loads the package exports. -->
+    <gazebo_ros gazebo_media_path="${prefix}"/>
+  </export>
 </package>

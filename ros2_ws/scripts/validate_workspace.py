@@ -90,6 +90,82 @@ def validate_map(errors):
         errors.append('example map contains an out-of-range pixel')
 
 
+def validate_sensor_materials(errors):
+    """Keep sensor visuals distinct without decorating collision geometry."""
+
+    material_path = (
+        SOURCE / 'wildebeest_description' / 'urdf' / 'materials.xacro'
+    )
+    urdf_path = (
+        SOURCE / 'wildebeest_description' / 'urdf' / 'wildebeest.urdf.xacro'
+    )
+    expected = {
+        '${prefix}lidar_link': (
+            'wildebeest_sensor_lidar_orange', '0.902 0.624 0.000 1.0'
+        ),
+        '${prefix}imu_link': (
+            'wildebeest_sensor_imu_rose', '0.800 0.475 0.655 1.0'
+        ),
+        '${prefix}gps_link': (
+            'wildebeest_sensor_gnss_yellow', '0.941 0.894 0.259 1.0'
+        ),
+        '${prefix}camera_link': (
+            'wildebeest_sensor_camera_sky', '0.337 0.706 0.914 1.0'
+        ),
+        '${prefix}ultrasonic_front_link': (
+            'wildebeest_sensor_ultrasonic_vermillion',
+            '0.835 0.369 0.000 1.0',
+        ),
+    }
+
+    material_root = ET.parse(material_path).getroot()
+    definitions = {
+        element.get('name'): element.find('color').get('rgba')
+        for element in material_root.findall('material')
+        if element.get('name') and element.find('color') is not None
+    }
+    urdf_root = ET.parse(urdf_path).getroot()
+    links = {element.get('name'): element for element in urdf_root.findall('link')}
+    sensor_materials = {material for material, _ in expected.values()}
+
+    for link_name, (material_name, rgba) in expected.items():
+        link = links.get(link_name)
+        if link is None:
+            errors.append(f'missing sensor link {link_name!r}')
+            continue
+        visual = link.find('visual')
+        material = visual.find('material') if visual is not None else None
+        actual_name = material.get('name') if material is not None else None
+        if actual_name != material_name:
+            errors.append(
+                f'{link_name} visual must use {material_name}, got {actual_name!r}'
+            )
+        if definitions.get(material_name) != rgba:
+            errors.append(f'{material_name} must use RGBA {rgba}')
+        if any(collision.find('.//material') is not None
+               for collision in link.findall('collision')):
+            errors.append(f'{link_name} collision geometry must remain uncolored')
+
+    if len(sensor_materials) != len(expected):
+        errors.append('every sensor must use a unique named material')
+    sensor_colors = {rgba for _, rgba in expected.values()}
+    body_colors = {
+        rgba for name, rgba in definitions.items() if name not in sensor_materials
+    }
+    if len(sensor_colors) != len(expected):
+        errors.append('every sensor must use a visually unique color')
+    if sensor_colors & body_colors:
+        errors.append('sensor colors must be distinct from chassis/electronics')
+    for link_name, link in links.items():
+        if link_name in expected:
+            continue
+        for material in link.findall('./visual/material'):
+            if material.get('name') in sensor_materials:
+                errors.append(
+                    f'sensor-only material {material.get("name")} reused by {link_name}'
+                )
+
+
 def validate_protocol(errors):
     """Exercise the canonical codec and commissioning command limits."""
 
@@ -234,6 +310,7 @@ def main():
     validate_manifests(errors)
     validate_yaml(errors)
     validate_map(errors)
+    validate_sensor_materials(errors)
     validate_protocol(errors)
     validate_robot_contract(errors)
     if errors:

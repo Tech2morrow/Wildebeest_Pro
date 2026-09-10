@@ -4,4 +4,6 @@ Run `roslaunch wildebeest_simulation demo.launch` after building and sourcing th
 
 The model has four independently named wheel links, joints, and transmissions. Noetic's established `diff_drive_controller` multi-wheel mode commands both front/rear joints on each side and averages their feedback, preserving the hardware protocol's single left/right side velocities. Gazebo uses reduced lateral wheel friction to permit skid-steer scrub. CAD geometry (0.033622 m radius, 0.025065 m width, 0.121843 m track, 0.117150 m wheelbase, 0.257 x 0.150 x 0.031 m shell) is nominal; tyre friction, effective track, mass, inertia, and controller gains require physical calibration.
 
+Sensor housings use the same identification colors in Gazebo and RViz: orange LiDAR, rose IMU, yellow GNSS, sky-blue camera, and vermillion front ultrasonic. See the workspace [sensor visualization legend](../../README.md#sensor-visualization-legend). Colors identify model components only and never represent live health or safety state.
+
 Gazebo Classic and ROS Noetic are both legacy software. The simulation is an integration and learning environment, not evidence that the physical robot is safe or calibrated. Optional GPS simulation requires `hector_gazebo_plugins` and `simulate_gps:=true` on `gazebo.launch`.

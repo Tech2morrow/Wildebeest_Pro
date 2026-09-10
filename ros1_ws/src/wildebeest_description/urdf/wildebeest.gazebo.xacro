@@ -24,6 +24,7 @@
     </gazebo>
 
     <gazebo reference="${prefix}lidar_link">
+      <material>Wildebeest/SensorLidarOrange</material>
       <sensor name="lidar" type="ray">
         <always_on>true</always_on><update_rate>10</update_rate><visualize>true</visualize>
         <pose>0 0 0 0 0 0</pose>
@@ -39,6 +40,7 @@
     </gazebo>
 
     <gazebo reference="${prefix}camera_link">
+      <material>Wildebeest/SensorCameraSkyBlue</material>
       <sensor name="front_camera" type="camera">
         <always_on>true</always_on><update_rate>20</update_rate><visualize>false</visualize>
         <camera>
@@ -54,6 +56,7 @@
     </gazebo>
 
     <gazebo reference="${prefix}imu_link">
+      <material>Wildebeest/SensorImuRose</material>
       <sensor name="imu" type="imu">
         <always_on>true</always_on><update_rate>50</update_rate>
         <plugin name="imu_ros" filename="libgazebo_ros_imu_sensor.so">
@@ -64,6 +67,7 @@
     </gazebo>
 
     <gazebo reference="${prefix}ultrasonic_front_link">
+      <material>Wildebeest/SensorUltrasonicVermillion</material>
       <sensor name="front_ultrasonic" type="ray">
         <always_on>true</always_on><update_rate>10</update_rate>
         <ray>
@@ -75,6 +79,10 @@
           <radiation>ultrasound</radiation><fov>0.26</fov><gaussianNoise>0.005</gaussianNoise>
         </plugin>
       </sensor>
+    </gazebo>
+
+    <gazebo reference="${prefix}gps_link">
+      <material>Wildebeest/SensorGnssYellow</material>
     </gazebo>
 
     <xacro:if value="${simulate_gps}">

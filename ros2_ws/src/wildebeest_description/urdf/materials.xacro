@@ -12,13 +12,25 @@
   <material name="wildebeest_rubber">
     <color rgba="0.018 0.022 0.028 1.0"/>
   </material>
-  <material name="wildebeest_silver">
-    <color rgba="0.55 0.60 0.65 1.0"/>
-  </material>
   <material name="wildebeest_green">
     <color rgba="0.10 0.62 0.30 1.0"/>
   </material>
-  <material name="wildebeest_red">
-    <color rgba="0.82 0.08 0.10 1.0"/>
+
+  <!-- Sensor-only colors are based on the color-blind-conscious Okabe-Ito
+       palette.  Their semantic names keep RViz and Gazebo visuals legible. -->
+  <material name="wildebeest_sensor_lidar_orange">
+    <color rgba="0.902 0.624 0.000 1.0"/>
+  </material>
+  <material name="wildebeest_sensor_imu_rose">
+    <color rgba="0.800 0.475 0.655 1.0"/>
+  </material>
+  <material name="wildebeest_sensor_gnss_yellow">
+    <color rgba="0.941 0.894 0.259 1.0"/>
+  </material>
+  <material name="wildebeest_sensor_camera_sky">
+    <color rgba="0.337 0.706 0.914 1.0"/>
+  </material>
+  <material name="wildebeest_sensor_ultrasonic_vermillion">
+    <color rgba="0.835 0.369 0.000 1.0"/>
   </material>
 </robot>
