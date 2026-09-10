@@ -4,7 +4,7 @@ from collections import deque
 import math
 from typing import Deque
 
-from .protocol import Frame, ProtocolError, encode_frame
+from .protocol import encode_frame, Frame, ProtocolError
 
 
 class MockController:
@@ -65,7 +65,6 @@ class MockController:
 
     def handle_frame(self, frame: Frame) -> None:
         """Apply one checksum-verified host command."""
-
         if frame.kind == 'CMD':
             self._require_fields(frame, 2)
             linear_mm_s = self._integer(frame.fields[0], -450, 450, 'linear_mm_s')
@@ -106,7 +105,6 @@ class MockController:
 
     def advance(self, duration_s: float) -> None:
         """Advance the model and enqueue any due telemetry."""
-
         if not math.isfinite(duration_s) or duration_s < 0.0:
             raise ValueError('duration_s must be finite and non-negative')
         if duration_s == 0.0:
@@ -137,14 +135,12 @@ class MockController:
 
     def drain(self) -> bytes:
         """Return all queued controller output."""
-
         output = b''.join(self._queued)
         self._queued.clear()
         return output
 
     def boot(self) -> None:
         """Emit the same identity frame as a freshly reset controller."""
-
         self._left_target = 0.0
         self._right_target = 0.0
         self._time_since_command_s = math.inf

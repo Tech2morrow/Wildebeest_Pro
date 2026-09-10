@@ -19,6 +19,8 @@ RUN apt-get update && \
     rosdep install --from-paths src --ignore-src --rosdistro noetic \
       --skip-keys gscam -r -y && \
     catkin_make && \
+    source devel/setup.bash && \
+    roslaunch --nodes wildebeest_bringup robot.launch use_sim:=true && \
     catkin_make run_tests && \
     catkin_test_results build/test_results && \
     rm -rf /var/lib/apt/lists/*

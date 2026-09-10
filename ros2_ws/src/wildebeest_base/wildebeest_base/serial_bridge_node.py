@@ -4,10 +4,10 @@ import math
 import time
 from typing import Optional
 
-import rclpy
 from diagnostic_msgs.msg import DiagnosticArray, DiagnosticStatus, KeyValue
 from geometry_msgs.msg import TransformStamped, Twist
 from nav_msgs.msg import Odometry
+import rclpy
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
 from sensor_msgs.msg import BatteryState, Imu, JointState, Range
@@ -17,16 +17,16 @@ from tf2_ros import TransformBroadcaster
 
 from .mock_controller import MockController
 from .protocol import (
+    encode_cmd,
+    encode_estop,
+    encode_ping,
     Frame,
     FrameStreamDecoder,
     ImuTelemetry,
     OdomTelemetry,
+    parse_telemetry,
     ProtocolError,
     RangeTelemetry,
-    encode_cmd,
-    encode_estop,
-    encode_ping,
-    parse_telemetry,
     validate_controller_boot,
 )
 from .transport import MockTransport, PySerialTransport, Transport, TransportError
@@ -545,7 +545,6 @@ class SerialBridge(Node):
 
     def _on_estop_topic(self, message: Bool) -> None:
         """Apply the stable dashboard emergency-stop topic."""
-
         if not self._transport.is_open:
             self.get_logger().error(
                 'cannot apply /wildebeest/estop: controller disconnected'
@@ -591,7 +590,6 @@ class SerialBridge(Node):
         self, reason: str, close: bool = True, attempt_estop: bool = True
     ) -> None:
         """Fail closed and require a new transport connection plus valid BOOT."""
-
         if attempt_estop and self._transport.is_open:
             try:
                 self._transport.write(
@@ -697,7 +695,6 @@ class SerialBridge(Node):
 
     def shutdown_transport(self) -> None:
         """Best-effort motion stop before closing the controller link."""
-
         if self._transport.is_open:
             self._send_velocity(0.0, 0.0)
             if self._estop_on_shutdown:

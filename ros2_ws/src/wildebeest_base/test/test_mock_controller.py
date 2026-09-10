@@ -9,12 +9,12 @@ sys.path.insert(0, str(Path(__file__).parents[1]))
 
 from wildebeest_base.mock_controller import MockController  # noqa: E402
 from wildebeest_base.protocol import (  # noqa: E402
-    Frame,
-    FrameStreamDecoder,
-    OdomTelemetry,
     decode_frame,
     encode_cmd,
     encode_estop,
+    Frame,
+    FrameStreamDecoder,
+    OdomTelemetry,
     parse_telemetry,
 )
 from wildebeest_base.transport import MockTransport  # noqa: E402

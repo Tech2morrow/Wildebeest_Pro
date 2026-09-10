@@ -20,7 +20,7 @@ class Transport(ABC):
         pass
 
     @abstractmethod
-    def open(self) -> None:
+    def open(self) -> None:  # noqa: A003
         pass
 
     @abstractmethod
@@ -50,7 +50,7 @@ class PySerialTransport(Transport):
     def is_open(self) -> bool:
         return bool(self._serial is not None and self._serial.is_open)
 
-    def open(self) -> None:
+    def open(self) -> None:  # noqa: A003
         try:
             import serial
 
@@ -115,7 +115,7 @@ class MockTransport(Transport):
     def is_open(self) -> bool:
         return self._open
 
-    def open(self) -> None:
+    def open(self) -> None:  # noqa: A003
         with self._lock:
             self._open = True
             self._last_update_s = time.monotonic()

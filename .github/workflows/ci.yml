@@ -114,13 +114,26 @@ jobs:
         run: docker build --file "${{ matrix.dockerfile }}" --tag wildebeest-ci:${{ matrix.tag }} .
       - name: Verify mock handshake and live odometry
         run: |
-          container_id="$(docker run --detach --rm wildebeest-ci:${{ matrix.tag }})"
+          container_id="$(docker run --detach wildebeest-ci:${{ matrix.tag }})"
           cleanup() {
+            status=$?
+            trap - EXIT
+            echo "::group::Mock bringup container state and logs"
+            docker inspect --format \
+              'status={{.State.Status}} exit_code={{.State.ExitCode}} oom_killed={{.State.OOMKilled}} error={{json .State.Error}}' \
+              "$container_id" || true
             docker logs "$container_id" || true
+            echo "::endgroup::"
             docker rm --force "$container_id" >/dev/null 2>&1 || true
+            exit "$status"
           }
           trap cleanup EXIT
-          docker exec "$container_id" bash -lc '
+          sleep 1
+          if [[ "$(docker inspect --format '{{.State.Running}}' "$container_id")" != "true" ]]; then
+            echo "Mock bringup container exited before the smoke probe started." >&2
+            exit 1
+          fi
+          timeout --signal=TERM --kill-after=5s 30s docker exec "$container_id" bash -lc '
             source "/opt/ros/${ROS_DISTRO}/setup.bash"
             if [[ "${ROS_VERSION}" == "1" ]]; then
               source /wildebeest/ros1_ws/devel/setup.bash

@@ -1,4 +1,4 @@
-"""Framing and validation for the Wildebeest Arduino serial protocol.
+r"""Framing and validation for the Wildebeest Arduino serial protocol.
 
 Wire format::
 
@@ -65,7 +65,6 @@ Telemetry = Union[OdomTelemetry, ImuTelemetry, RangeTelemetry, Frame]
 
 def crc16_ccitt_false(data: bytes) -> int:
     """Return CRC-16/CCITT-FALSE (poly 0x1021, init 0xffff)."""
-
     crc = 0xFFFF
     for byte in data:
         crc ^= byte << 8
@@ -84,7 +83,6 @@ def _validate_sequence(sequence: int) -> None:
 
 def encode_frame(kind: str, sequence: int, fields: Iterable[object] = ()) -> bytes:
     """Encode one complete frame, including checksum and newline."""
-
     _validate_sequence(sequence)
     if not _TYPE_PATTERN.fullmatch(kind):
         raise ProtocolError(f'invalid message type: {kind!r}')
@@ -107,7 +105,6 @@ def encode_frame(kind: str, sequence: int, fields: Iterable[object] = ()) -> byt
 
 def decode_frame(raw: bytes) -> Frame:
     """Decode and verify one newline-terminated (or stripped) frame."""
-
     if not isinstance(raw, bytes):
         raise ProtocolError('frame must be bytes')
     if not raw or len(raw) > MAX_FRAME_BYTES:
@@ -153,7 +150,6 @@ class FrameStreamDecoder:
 
     def feed(self, data: bytes) -> Tuple[List[Frame], List[str]]:
         """Consume bytes and return ``(valid_frames, rejection_reasons)``."""
-
         if not isinstance(data, bytes):
             raise TypeError('stream data must be bytes')
         self._buffer.extend(data)
@@ -191,7 +187,6 @@ class FrameStreamDecoder:
 
 def encode_cmd(sequence: int, linear_m_s: float, angular_rad_s: float) -> bytes:
     """Encode a body velocity command using integer millimetre units."""
-
     _require_finite(linear_m_s, 'linear_m_s')
     _require_finite(angular_rad_s, 'angular_rad_s')
     linear_mm_s = round(linear_m_s * 1000.0)
@@ -215,7 +210,6 @@ def encode_estop(sequence: int, engaged: bool) -> bytes:
 
 def validate_schema(frame: Frame) -> Frame:
     """Validate field counts and integer ranges for any protocol-v1 message."""
-
     field_counts = {
         'CMD': 2,
         'PING': 0,
@@ -254,7 +248,6 @@ def validate_schema(frame: Frame) -> Frame:
 
 def validate_controller_boot(frame: Frame) -> Frame:
     """Require the exact controller identity and protocol version."""
-
     validate_schema(frame)
     if frame.kind != 'BOOT':
         raise ProtocolError('controller readiness requires a BOOT frame')
@@ -269,7 +262,6 @@ def validate_controller_boot(frame: Frame) -> Frame:
 
 def parse_telemetry(frame: Frame) -> Telemetry:
     """Validate and convert a telemetry frame to SI units."""
-
     validate_schema(frame)
     if frame.kind == 'ODOM':
         return OdomTelemetry(

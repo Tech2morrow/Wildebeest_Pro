@@ -10,19 +10,19 @@ import unittest
 sys.path.insert(0, str(Path(__file__).parents[1]))
 
 from wildebeest_base.protocol import (  # noqa: E402
-    Frame,
-    FrameStreamDecoder,
-    ImuTelemetry,
-    MAX_FRAME_BYTES,
-    OdomTelemetry,
-    ProtocolError,
-    RangeTelemetry,
     crc16_ccitt_false,
     decode_frame,
     encode_cmd,
     encode_estop,
     encode_frame,
+    Frame,
+    FrameStreamDecoder,
+    ImuTelemetry,
+    MAX_FRAME_BYTES,
+    OdomTelemetry,
     parse_telemetry,
+    ProtocolError,
+    RangeTelemetry,
     validate_controller_boot,
     validate_schema,
 )
